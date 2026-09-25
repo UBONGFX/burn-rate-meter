@@ -530,16 +530,25 @@ main {
 }
 
 @media (max-width: 600px) {
+  /* Name + delete on one row, each stepper full width below: half-width
+     steppers are too narrow to show a 2–3 digit rate next to its suffix. */
   .preset-edit {
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 1fr auto;
   }
 
   .preset-name {
-    grid-column: 1 / 2;
+    grid-row: 1;
+    grid-column: 1;
+    min-height: 2.6rem;
   }
 
   .preset-edit .btn-icon {
-    justify-self: end;
+    grid-row: 1;
+    grid-column: 2;
+  }
+
+  .preset-edit .stepper {
+    grid-column: 1 / -1;
   }
 
   .stats dt {
