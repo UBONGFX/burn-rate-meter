@@ -2,11 +2,28 @@ import { useState } from 'react'
 import { AnimatePresence, motion, useReducedMotion } from 'motion/react'
 import { useMeetingTimer } from '../hooks/useMeetingTimer'
 import { useI18n } from '../i18n/useI18n'
-import { changeHeadcount, compareCost, costAt, costPerMinute, formatDuration, startSegment } from '../lib/cost'
-import { LIMITS } from '../lib/settings'
+import {
+  changeRate,
+  costAt,
+  costPerMinute,
+  formatDuration,
+  headcount,
+  hourlyTotal,
+  startSegment,
+} from '../lib/cost'
+import type { Attendance } from '../lib/settings'
+import { AttendeeList } from './AttendeeList'
 import { MoneyRain } from './MoneyRain'
+import { Summary } from './Summary'
 import type { MeetingConfig } from './QuickStart'
-import { Stepper } from './Stepper'
+
+/**
+ * As large as possible, but shrinking with the number of characters so long
+ * amounts like "12.345,67 €" still fit the page width (max 760px minus gutters).
+ */
+function counterFontSize(text: string): string {
+  return `min(8.5rem, 17vw, calc(${(1.55 / text.length).toFixed(4)} * min(100vw - 32px, 728px)))`
+}
 
 type MeterProps = {
   config: MeetingConfig
@@ -18,13 +35,20 @@ type MeterProps = {
 export function Meter({ config, billValue, onRestart, onNew }: MeterProps) {
   const { t, formatEUR } = useI18n()
   const { status, elapsedMs, now, pause, resume, stop } = useMeetingTimer()
-  const [segment, setSegment] = useState(() => startSegment(config.people, config.hourlyRate))
+  const [attendance, setAttendance] = useState<Attendance>(config.attendance)
+  const [segment, setSegment] = useState(() => startSegment(hourlyTotal(config.roles, config.attendance)))
   const reduceMotion = useReducedMotion()
 
   const cost = costAt(elapsedMs, segment)
   const billCount = Math.floor(cost / billValue)
-  const comparison = compareCost(cost)
-  const summary = t.meter.summary(formatDuration(elapsedMs), segment.people)
+  const people = headcount(attendance)
+
+  // Someone joins or leaves: only the time from now on is billed at the new rate.
+  const changeCount = (roleId: string, count: number) => {
+    const next = { ...attendance, [roleId]: count }
+    setAttendance(next)
+    setSegment((s) => changeRate(s, now(), hourlyTotal(config.roles, next)))
+  }
 
   return (
     <section className="meter">
@@ -48,6 +72,7 @@ export function Meter({ config, billValue, onRestart, onNew }: MeterProps) {
           initial={reduceMotion || billCount === 0 ? false : { scale: 1.06 }}
           animate={{ scale: 1 }}
           transition={{ type: 'spring', stiffness: 400, damping: 15 }}
+          style={{ fontSize: counterFontSize(formatEUR(cost)) }}
           aria-live="off"
         >
           {formatEUR(cost)}
@@ -61,11 +86,11 @@ export function Meter({ config, billValue, onRestart, onNew }: MeterProps) {
         </div>
         <div>
           <dt>{t.meter.perMinute}</dt>
-          <dd>{formatEUR(costPerMinute(segment.people, segment.hourlyRate))}</dd>
+          <dd>{formatEUR(costPerMinute(segment.hourlyTotal))}</dd>
         </div>
         <div>
-          <dt>{t.meter.hourlyRate}</dt>
-          <dd>{formatEUR(segment.hourlyRate, { rounded: true })}</dd>
+          <dt>{t.meter.people}</dt>
+          <dd>{people}</dd>
         </div>
       </dl>
 
@@ -73,33 +98,18 @@ export function Meter({ config, billValue, onRestart, onNew }: MeterProps) {
         {status === 'ended' ? (
           <motion.div
             key="summary"
-            className="card summary"
+            className="summary-wrap"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
           >
-            <p>
-              {summary.before} <strong>{formatEUR(cost)}</strong>
-              {summary.after}
-            </p>
-            <p className="comparison">
-              {comparison ? (
-                <>
-                  {t.meter.comparisonPrefix} <span className="comparison-emoji">{comparison.emoji}</span>{' '}
-                  {comparison.count} {t.comparisons[comparison.key][comparison.count === 1 ? 0 : 1]}!
-                </>
-              ) : (
-                t.meter.noComparison
-              )}
-            </p>
-            <div className="actions">
-              <button type="button" className="btn" onClick={onNew}>
-                {t.meter.newMeeting}
-              </button>
-              <button type="button" className="btn btn-primary" onClick={onRestart}>
-                {t.meter.sameAgain}
-              </button>
-            </div>
+            <Summary
+              cost={cost}
+              roles={config.roles}
+              attendance={attendance}
+              onNew={onNew}
+              onRestart={onRestart}
+            />
           </motion.div>
         ) : (
           <motion.div
@@ -109,12 +119,6 @@ export function Meter({ config, billValue, onRestart, onNew }: MeterProps) {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
           >
-            <Stepper
-              label={t.meter.peopleInRoom}
-              value={segment.people}
-              onChange={(people) => setSegment((s) => changeHeadcount(s, now(), people))}
-              {...LIMITS.people}
-            />
             <div className="actions">
               {status === 'running' ? (
                 <button type="button" className="btn" onClick={pause}>
@@ -129,6 +133,7 @@ export function Meter({ config, billValue, onRestart, onNew }: MeterProps) {
                 {t.meter.end}
               </button>
             </div>
+            <AttendeeList minimal roles={config.roles} attendance={attendance} onChange={changeCount} />
           </motion.div>
         )}
       </AnimatePresence>

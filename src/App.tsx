@@ -48,8 +48,13 @@ function App() {
             <span className="logo-flame">🔥</span> Burn Rate Meter
           </button>
           {view === 'start' && (
-            <button type="button" className="btn btn-ghost" onClick={() => setView('settings')}>
-              {t.nav.settings}
+            <button
+              type="button"
+              className="btn btn-ghost"
+              aria-label={t.nav.settings}
+              onClick={() => setView('settings')}
+            >
+              ⚙️<span className="nav-label"> {t.nav.settings}</span>
             </button>
           )}
           {view === 'settings' && (

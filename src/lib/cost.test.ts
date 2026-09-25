@@ -1,32 +1,52 @@
 import { describe, expect, it } from 'vitest'
 import {
-  changeHeadcount,
+  changeRate,
   compareCost,
   costAt,
   costPerMinute,
   formatDuration,
   formatEUR,
+  headcount,
+  hourlyTotal,
   startSegment,
 } from './cost'
 
+const roles = [
+  { id: 'team', hourlyRate: 80 },
+  { id: 'lead', hourlyRate: 100 },
+]
+
 describe('cost', () => {
+  it('sums the hourly rates of all attendees', () => {
+    expect(hourlyTotal(roles, { team: 6 })).toBe(480)
+    expect(hourlyTotal(roles, { team: 7, lead: 1 })).toBe(660)
+    expect(hourlyTotal(roles, {})).toBe(0)
+    // Counts for unknown roles are ignored
+    expect(hourlyTotal(roles, { team: 1, ghost: 5 })).toBe(80)
+  })
+
+  it('counts heads across roles', () => {
+    expect(headcount({ team: 7, lead: 1 })).toBe(8)
+    expect(headcount({})).toBe(0)
+  })
+
   it('computes cost per minute', () => {
-    expect(costPerMinute(6, 80)).toBeCloseTo(8)
+    expect(costPerMinute(480)).toBeCloseTo(8)
   })
 
   it('accumulates cost over time', () => {
-    const segment = startSegment(6, 80)
+    const segment = startSegment(480)
     expect(costAt(0, segment)).toBe(0)
     expect(costAt(60_000, segment)).toBeCloseTo(8)
     expect(costAt(3_600_000, segment)).toBeCloseTo(480)
   })
 
-  it('keeps burned money when the headcount changes', () => {
-    const first = startSegment(6, 80)
-    const second = changeHeadcount(first, 60_000, 12)
+  it('keeps burned money when the rate changes', () => {
+    const first = startSegment(480)
+    // A lead joins after one minute
+    const second = changeRate(first, 60_000, hourlyTotal(roles, { team: 6, lead: 1 }))
     expect(costAt(60_000, second)).toBeCloseTo(8)
-    // Second minute burns at double speed
-    expect(costAt(120_000, second)).toBeCloseTo(8 + 16)
+    expect(costAt(120_000, second)).toBeCloseTo(8 + 580 / 60)
   })
 
   it('formats euros per locale', () => {

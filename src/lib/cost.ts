@@ -1,38 +1,48 @@
 import type { Locale } from '../i18n/locale'
+import type { Attendance, Role } from './settings'
 
 // All money math lives here as pure functions so it can be unit-tested
 // without React or timers.
 
 /**
- * The cost state from `startMs` on. When the headcount changes mid-meeting a
- * new segment starts, carrying the money already burned in `baseCost`.
+ * The cost state from `startMs` on. When someone joins or leaves mid-meeting a
+ * new segment starts with the new total rate, carrying the money already burned in `baseCost`.
  */
 export type RateSegment = {
   startMs: number
   baseCost: number
-  people: number
-  hourlyRate: number
+  /** Sum of all attendees' hourly rates. */
+  hourlyTotal: number
 }
 
-export function costPerSecond(people: number, hourlyRate: number): number {
-  return (people * hourlyRate) / 3600
+/** Σ count × hourly rate over all roles. */
+export function hourlyTotal(roles: Pick<Role, 'id' | 'hourlyRate'>[], attendance: Attendance): number {
+  return roles.reduce((sum, role) => sum + (attendance[role.id] ?? 0) * role.hourlyRate, 0)
 }
 
-export function costPerMinute(people: number, hourlyRate: number): number {
-  return costPerSecond(people, hourlyRate) * 60
+export function headcount(attendance: Attendance): number {
+  return Object.values(attendance).reduce((sum, count) => sum + count, 0)
 }
 
-export function startSegment(people: number, hourlyRate: number): RateSegment {
-  return { startMs: 0, baseCost: 0, people, hourlyRate }
+export function costPerSecond(hourlyTotal: number): number {
+  return hourlyTotal / 3600
+}
+
+export function costPerMinute(hourlyTotal: number): number {
+  return costPerSecond(hourlyTotal) * 60
+}
+
+export function startSegment(hourlyTotal: number): RateSegment {
+  return { startMs: 0, baseCost: 0, hourlyTotal }
 }
 
 export function costAt(elapsedMs: number, segment: RateSegment): number {
   const segmentSeconds = Math.max(0, elapsedMs - segment.startMs) / 1000
-  return segment.baseCost + costPerSecond(segment.people, segment.hourlyRate) * segmentSeconds
+  return segment.baseCost + costPerSecond(segment.hourlyTotal) * segmentSeconds
 }
 
-export function changeHeadcount(segment: RateSegment, elapsedMs: number, people: number): RateSegment {
-  return { ...segment, startMs: elapsedMs, baseCost: costAt(elapsedMs, segment), people }
+export function changeRate(segment: RateSegment, elapsedMs: number, hourlyTotal: number): RateSegment {
+  return { startMs: elapsedMs, baseCost: costAt(elapsedMs, segment), hourlyTotal }
 }
 
 const INTL_LOCALES: Record<Locale, string> = {

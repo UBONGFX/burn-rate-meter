@@ -1,14 +1,15 @@
 import { useState } from 'react'
 import { motion } from 'motion/react'
 import { useI18n } from '../i18n/useI18n'
-import { costPerMinute } from '../lib/cost'
-import { LIMITS, type Settings } from '../lib/settings'
-import { Stepper } from './Stepper'
+import { costPerMinute, headcount, hourlyTotal } from '../lib/cost'
+import { countOf, type Attendance, type Role, type Settings } from '../lib/settings'
+import { AttendeeList } from './AttendeeList'
 
 export type MeetingConfig = {
   name: string | null
-  people: number
-  hourlyRate: number
+  /** Snapshot of the roles at start, so editing settings never changes a running meeting. */
+  roles: Role[]
+  attendance: Attendance
 }
 
 type QuickStartProps = {
@@ -18,64 +19,66 @@ type QuickStartProps = {
 
 export function QuickStart({ settings, onStart }: QuickStartProps) {
   const { t, formatEUR } = useI18n()
-  const [people, setPeople] = useState(settings.defaultPeople)
-  const [hourlyRate, setHourlyRate] = useState(settings.defaultHourlyRate)
+  const { roles, presets } = settings
+  const [attendance, setAttendance] = useState<Attendance>(settings.defaultAttendance)
   const [presetId, setPresetId] = useState<string | null>(null)
 
-  const preset = settings.presets.find((p) => p.id === presetId)
-  // A preset stays selected only while its values are untouched.
-  const activePreset = preset && preset.people === people && preset.hourlyRate === hourlyRate ? preset : null
+  const preset = presets.find((p) => p.id === presetId)
+  // A preset stays selected only while its counts are untouched.
+  const activePreset =
+    preset && roles.every((r) => countOf(preset.attendance, r.id) === countOf(attendance, r.id)) ? preset : null
+  const people = headcount(attendance)
+  const total = hourlyTotal(roles, attendance)
 
   return (
-    <section className="card quick-start">
-      <h2>{t.quickStart.title}</h2>
+    <section className="quick-start">
+      {/* The price is the hero, echoing the meter the meeting will run on. */}
+      <div className="qs-hero" aria-live="polite">
+        <h2 className="qs-kicker">{t.quickStart.title}</h2>
+        <p className="qs-price">{formatEUR(costPerMinute(total))}</p>
+        <p className="qs-unit">{t.quickStart.perMinute}</p>
+        <p className="qs-sub">{t.quickStart.perHour(formatEUR(total, { rounded: true }))}</p>
+      </div>
 
-      {settings.presets.length > 0 && (
-        <div className="presets" role="group" aria-label={t.quickStart.presets}>
-          {settings.presets.map((p) => (
-            <motion.button
-              key={p.id}
-              type="button"
-              className={`chip ${activePreset?.id === p.id ? 'chip-active' : ''}`}
-              whileTap={{ scale: 0.95 }}
-              onClick={() => {
-                setPresetId(p.id)
-                setPeople(p.people)
-                setHourlyRate(p.hourlyRate)
-              }}
-            >
-              {p.name}
-              <span className="chip-meta">
-                {p.people} × {p.hourlyRate} €
-              </span>
-            </motion.button>
-          ))}
+      {presets.length > 0 && (
+        <div className="preset-pills" role="group" aria-label={t.quickStart.presets}>
+          {presets.map((p) => {
+            const active = activePreset?.id === p.id
+            return (
+              <motion.button
+                key={p.id}
+                type="button"
+                className={active ? 'preset-pill preset-pill-active' : 'preset-pill'}
+                aria-pressed={active}
+                whileTap={{ scale: 0.96 }}
+                onClick={() => {
+                  setPresetId(p.id)
+                  setAttendance(p.attendance)
+                }}
+              >
+                {p.name}
+                <span className="preset-pill-count" aria-label={t.quickStart.people(headcount(p.attendance))}>
+                  {headcount(p.attendance)}
+                </span>
+              </motion.button>
+            )
+          })}
         </div>
       )}
 
-      <div className="stepper-row">
-        <Stepper label={t.quickStart.people} value={people} onChange={setPeople} {...LIMITS.people} />
-        <Stepper
-          label={t.quickStart.hourlyRate}
-          value={hourlyRate}
-          onChange={setHourlyRate}
-          step={5}
-          suffix="€/h"
-          {...LIMITS.hourlyRate}
-        />
-      </div>
-
-      <p className="preview">
-        ≈ <strong>{formatEUR(costPerMinute(people, hourlyRate))}</strong> {t.quickStart.perMinute} ·{' '}
-        {formatEUR(people * hourlyRate, { rounded: true })} {t.quickStart.perHour}
-      </p>
+      <AttendeeList
+        roles={roles}
+        attendance={attendance}
+        onChange={(roleId, count) => setAttendance((a) => ({ ...a, [roleId]: count }))}
+      />
 
       <motion.button
         type="button"
         className="btn btn-primary btn-large"
-        whileHover={{ scale: 1.02 }}
-        whileTap={{ scale: 0.97 }}
-        onClick={() => onStart({ name: activePreset?.name ?? null, people, hourlyRate })}
+        whileHover={people > 0 ? { scale: 1.02 } : undefined}
+        whileTap={people > 0 ? { scale: 0.97 } : undefined}
+        disabled={people === 0}
+        onClick={() => onStart({ name: activePreset?.name ?? null, roles, attendance })}
       >
         {t.quickStart.start}
       </motion.button>

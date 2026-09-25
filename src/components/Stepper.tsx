@@ -1,17 +1,35 @@
-import { useId, useState } from 'react'
+import { useId, useState, type ReactNode } from 'react'
 import { useI18n } from '../i18n/useI18n'
 
 type StepperProps = {
+  /** Accessible name; also shown unless `display` is given. */
   label: string
+  /** Richer visible label, e.g. name plus a muted hint. */
+  display?: ReactNode
   value: number
   onChange: (value: number) => void
   min: number
   max: number
   step?: number
   suffix?: string
+  /** One-line layout (label left, small controls right) for dense lists. */
+  compact?: boolean
+  /** Keep the label for screen readers only, when the row already makes it obvious. */
+  hideLabel?: boolean
 }
 
-export function Stepper({ label, value, onChange, min, max, step = 1, suffix }: StepperProps) {
+export function Stepper({
+  label,
+  display,
+  value,
+  onChange,
+  min,
+  max,
+  step = 1,
+  suffix,
+  compact = false,
+  hideLabel = false,
+}: StepperProps) {
   const { t } = useI18n()
   const id = useId()
   // Keep the typed text separately so the field can be empty while editing.
@@ -25,8 +43,10 @@ export function Stepper({ label, value, onChange, min, max, step = 1, suffix }: 
   const clamp = (n: number) => Math.min(max, Math.max(min, n))
 
   return (
-    <div className="stepper">
-      <label htmlFor={id}>{label}</label>
+    <div className={compact ? 'stepper stepper-compact' : 'stepper'}>
+      <label htmlFor={id} className={hideLabel ? 'sr-only' : undefined}>
+        {display ?? label}
+      </label>
       <div className="stepper-controls">
         <button
           type="button"
@@ -39,6 +59,7 @@ export function Stepper({ label, value, onChange, min, max, step = 1, suffix }: 
         <div className="stepper-input">
           <input
             id={id}
+            aria-label={display ? label : undefined}
             type="number"
             inputMode="numeric"
             min={min}

@@ -1,7 +1,10 @@
+import { useState } from 'react'
 import { AnimatePresence, motion } from 'motion/react'
 import { LANGUAGES } from '../i18n/locale'
 import { useI18n } from '../i18n/useI18n'
-import { LIMITS, THEMES, type Preset, type Settings as SettingsType } from '../lib/settings'
+import { costPerMinute, headcount, hourlyTotal } from '../lib/cost'
+import { LIMITS, THEMES, type Attendance, type Preset, type Role, type Settings as SettingsType } from '../lib/settings'
+import { AttendeeRows } from './AttendeeList'
 import { Segmented } from './Segmented'
 import { Stepper } from './Stepper'
 
@@ -11,120 +14,129 @@ type SettingsProps = {
   onReset: () => void
 }
 
+const itemAnimation = {
+  layout: true,
+  initial: { opacity: 0, height: 0 },
+  animate: { opacity: 1, height: 'auto' },
+  exit: { opacity: 0, height: 0 },
+} as const
+
+const panelAnimation = {
+  initial: { opacity: 0, height: 0 },
+  animate: { opacity: 1, height: 'auto' },
+  exit: { opacity: 0, height: 0 },
+} as const
+
+function withoutRole(attendance: Attendance, roleId: string): Attendance {
+  const { [roleId]: _removed, ...rest } = attendance
+  return rest
+}
+
 export function Settings({ settings, onChange, onReset }: SettingsProps) {
-  const { t } = useI18n()
+  const { t, formatEUR } = useI18n()
+  const { roles } = settings
+  // Presets are collapsed to one line each; only the one being edited is open.
+  const [openPresetId, setOpenPresetId] = useState<string | null>(null)
   const update = (patch: Partial<SettingsType>) => onChange({ ...settings, ...patch })
+
+  const updateRole = (id: string, patch: Partial<Role>) =>
+    update({ roles: roles.map((r) => (r.id === id ? { ...r, ...patch } : r)) })
+
+  const addRole = () =>
+    update({
+      roles: [...roles, { id: crypto.randomUUID(), name: t.settings.newRoleName, hourlyRate: roles[0]?.hourlyRate ?? 50 }],
+    })
+
+  // Deleting a role also removes its counts everywhere, so no preset points at a missing role.
+  const deleteRole = (id: string) =>
+    update({
+      roles: roles.filter((r) => r.id !== id),
+      defaultAttendance: withoutRole(settings.defaultAttendance, id),
+      presets: settings.presets.map((p) => ({ ...p, attendance: withoutRole(p.attendance, id) })),
+    })
 
   const updatePreset = (id: string, patch: Partial<Preset>) =>
     update({ presets: settings.presets.map((p) => (p.id === id ? { ...p, ...patch } : p)) })
 
-  const addPreset = () =>
+  const addPreset = () => {
+    const id = crypto.randomUUID()
     update({
-      presets: [
-        ...settings.presets,
-        {
-          id: crypto.randomUUID(),
-          name: t.settings.newPresetName,
-          people: settings.defaultPeople,
-          hourlyRate: settings.defaultHourlyRate,
-        },
-      ],
+      presets: [...settings.presets, { id, name: t.settings.newPresetName, attendance: settings.defaultAttendance }],
     })
+    setOpenPresetId(id)
+  }
 
   return (
     <div className="settings">
-      <section className="card">
-        <h2>{t.settings.appearance}</h2>
-        <Segmented
-          name="theme"
-          label={t.settings.themeLabel}
-          options={THEMES}
-          labels={t.settings.themes}
-          value={settings.theme}
-          onChange={(theme) => update({ theme })}
-        />
-        <p className="hint">{t.settings.themeHint}</p>
-      </section>
-
-      <section className="card">
-        <h2>{t.settings.language}</h2>
-        <Segmented
-          name="language"
-          label={t.settings.language}
-          options={LANGUAGES}
-          labels={t.settings.languages}
-          value={settings.language}
-          onChange={(language) => update({ language })}
-        />
-        <p className="hint">{t.settings.languageHint}</p>
-      </section>
-
-      <section className="card">
-        <h2>{t.settings.defaults}</h2>
-        <div className="stepper-row">
-          <Stepper
-            label={t.settings.meetingSize}
-            value={settings.defaultPeople}
-            onChange={(defaultPeople) => update({ defaultPeople })}
-            {...LIMITS.people}
-          />
-          <Stepper
-            label={t.settings.hourlyRate}
-            value={settings.defaultHourlyRate}
-            onChange={(defaultHourlyRate) => update({ defaultHourlyRate })}
-            step={5}
-            suffix="€/h"
-            {...LIMITS.hourlyRate}
-          />
-          <Stepper
-            label={t.settings.billValue}
-            value={settings.billValue}
-            onChange={(billValue) => update({ billValue })}
-            step={5}
-            suffix="€"
-            {...LIMITS.billValue}
-          />
+      <section className="settings-group">
+        <h2 className="settings-label">{t.settings.general}</h2>
+        <div className="settings-list">
+          <div className="settings-row settings-row-stacked">
+            <span className="settings-row-title">{t.settings.themeLabel}</span>
+            <Segmented
+              name="theme"
+              label={t.settings.themeLabel}
+              options={THEMES}
+              labels={t.settings.themes}
+              value={settings.theme}
+              onChange={(theme) => update({ theme })}
+            />
+          </div>
+          <div className="settings-row settings-row-stacked">
+            <span className="settings-row-title">{t.settings.language}</span>
+            <Segmented
+              name="language"
+              label={t.settings.language}
+              options={LANGUAGES}
+              labels={t.settings.languages}
+              value={settings.language}
+              onChange={(language) => update({ language })}
+            />
+          </div>
+          <div className="settings-row">
+            <Stepper
+              compact
+              label={t.settings.billValue}
+              value={settings.billValue}
+              onChange={(billValue) => update({ billValue })}
+              step={5}
+              suffix="€"
+              {...LIMITS.billValue}
+            />
+          </div>
         </div>
       </section>
 
-      <section className="card">
-        <h2>{t.settings.presets}</h2>
-        <ul className="preset-list">
+      <section className="settings-group">
+        <h2 className="settings-label">{t.settings.roles}</h2>
+        <p className="settings-hint">{t.settings.rolesHint}</p>
+        <ul className="settings-list">
           <AnimatePresence initial={false}>
-            {settings.presets.map((preset) => (
-              <motion.li
-                key={preset.id}
-                layout
-                initial={{ opacity: 0, height: 0 }}
-                animate={{ opacity: 1, height: 'auto' }}
-                exit={{ opacity: 0, height: 0 }}
-              >
-                <div className="preset-edit">
+            {roles.map((role) => (
+              <motion.li key={role.id} className="settings-item" {...itemAnimation}>
+                <div className="role-row">
                   <input
-                    className="preset-name"
-                    aria-label={t.settings.presetName}
-                    value={preset.name}
-                    onChange={(e) => updatePreset(preset.id, { name: e.target.value })}
+                    className="inline-input"
+                    aria-label={t.settings.roleName}
+                    value={role.name}
+                    onChange={(e) => updateRole(role.id, { name: e.target.value })}
                   />
                   <Stepper
-                    label={t.settings.people}
-                    value={preset.people}
-                    onChange={(people) => updatePreset(preset.id, { people })}
-                    {...LIMITS.people}
-                  />
-                  <Stepper
+                    compact
+                    hideLabel
                     label={t.settings.hourlyRate}
-                    value={preset.hourlyRate}
-                    onChange={(hourlyRate) => updatePreset(preset.id, { hourlyRate })}
+                    value={role.hourlyRate}
+                    onChange={(hourlyRate) => updateRole(role.id, { hourlyRate })}
                     step={5}
                     suffix="€/h"
                     {...LIMITS.hourlyRate}
                   />
                   <button
                     type="button"
-                    className="btn btn-icon"
-                    aria-label={t.settings.deletePreset(preset.name)}
-                    onClick={() => update({ presets: settings.presets.filter((p) => p.id !== preset.id) })}
+                    className="icon-button"
+                    aria-label={t.settings.deleteRole(role.name)}
+                    disabled={roles.length === 1}
+                    onClick={() => deleteRole(role.id)}
                   >
                     🗑
                   </button>
@@ -132,23 +144,98 @@ export function Settings({ settings, onChange, onReset }: SettingsProps) {
               </motion.li>
             ))}
           </AnimatePresence>
+          <li className="settings-item">
+            <button type="button" className="settings-add" onClick={addRole}>
+              {t.settings.addRole}
+            </button>
+          </li>
         </ul>
-        <button type="button" className="btn" onClick={addPreset}>
-          {t.settings.addPreset}
-        </button>
       </section>
 
-      <div className="actions">
-        <button
-          type="button"
-          className="btn btn-ghost"
-          onClick={() => {
-            if (confirm(t.settings.resetConfirm)) onReset()
-          }}
-        >
-          {t.settings.reset}
-        </button>
-      </div>
+      <section className="settings-group">
+        <h2 className="settings-label">{t.settings.defaults}</h2>
+        <p className="settings-hint">{t.settings.defaultsHint}</p>
+        <AttendeeRows
+          roles={roles}
+          attendance={settings.defaultAttendance}
+          onChange={(roleId, count) => update({ defaultAttendance: { ...settings.defaultAttendance, [roleId]: count } })}
+        />
+      </section>
+
+      <section className="settings-group">
+        <h2 className="settings-label">{t.settings.presets}</h2>
+        <ul className="settings-list">
+          <AnimatePresence initial={false}>
+            {settings.presets.map((preset) => {
+              const open = openPresetId === preset.id
+              const people = t.quickStart.people(headcount(preset.attendance))
+              const perMinute = formatEUR(costPerMinute(hourlyTotal(roles, preset.attendance)))
+              return (
+                <motion.li key={preset.id} className="settings-item" {...itemAnimation}>
+                  <button
+                    type="button"
+                    className="preset-row"
+                    aria-expanded={open}
+                    onClick={() => setOpenPresetId(open ? null : preset.id)}
+                  >
+                    <span className="preset-row-text">
+                      <span className="preset-row-name">{preset.name}</span>
+                      <span className="preset-row-meta">{t.settings.presetMeta(people, perMinute)}</span>
+                    </span>
+                    <span className="attendees-action">
+                      {t.settings.edit} <span className={open ? 'chevron chevron-open' : 'chevron'}>▾</span>
+                    </span>
+                  </button>
+                  <AnimatePresence initial={false}>
+                    {open && (
+                      <motion.div className="preset-editor" {...panelAnimation}>
+                        <div className="preset-editor-inner">
+                          <input
+                            className="inline-input inline-input-boxed"
+                            aria-label={t.settings.presetName}
+                            value={preset.name}
+                            onChange={(e) => updatePreset(preset.id, { name: e.target.value })}
+                          />
+                          <AttendeeRows
+                            roles={roles}
+                            attendance={preset.attendance}
+                            onChange={(roleId, count) =>
+                              updatePreset(preset.id, { attendance: { ...preset.attendance, [roleId]: count } })
+                            }
+                          />
+                          <button
+                            type="button"
+                            className="text-button text-button-danger"
+                            aria-label={t.settings.deletePreset(preset.name)}
+                            onClick={() => update({ presets: settings.presets.filter((p) => p.id !== preset.id) })}
+                          >
+                            {t.settings.deletePresetText}
+                          </button>
+                        </div>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </motion.li>
+              )
+            })}
+          </AnimatePresence>
+          <li className="settings-item">
+            <button type="button" className="settings-add" onClick={addPreset}>
+              {t.settings.addPreset}
+            </button>
+          </li>
+        </ul>
+      </section>
+
+      <button
+        type="button"
+        className="text-button text-button-danger settings-reset"
+        onClick={() => {
+          if (confirm(t.settings.resetConfirm)) onReset()
+        }}
+      >
+        {t.settings.reset}
+      </button>
     </div>
   )
 }

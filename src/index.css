@@ -137,6 +137,7 @@ main {
 }
 
 .logo {
+  white-space: nowrap;
   background: none;
   border: none;
   padding: 0;
@@ -203,9 +204,6 @@ main {
   font-size: 1.2rem;
 }
 
-.btn-icon {
-  padding: 0.5rem 0.7rem;
-}
 
 /* Stepper */
 
@@ -278,63 +276,152 @@ main {
   pointer-events: none;
 }
 
-.stepper-row {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-  gap: 1rem;
-}
 
 /* Quick start */
 
 .quick-start {
   display: flex;
   flex-direction: column;
-  gap: 1.25rem;
+  gap: 1.75rem;
+  width: 100%;
+  max-width: 440px;
+  margin: 0 auto;
 }
 
-.quick-start h2 {
+.qs-hero {
+  text-align: center;
+}
+
+.qs-hero p {
   margin: 0;
 }
 
-.presets {
+.qs-kicker {
+  margin: 0 0 0.5rem;
+  font-size: 0.8rem;
+  letter-spacing: 0.12em;
+}
+
+.qs-price {
+  font-size: clamp(3.25rem, 16vw, 4.75rem);
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: -0.03em;
+  font-variant-numeric: tabular-nums;
+  background: linear-gradient(180deg, var(--counter-top), var(--accent) 45%, var(--accent-2));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.qs-unit {
+  margin-top: 0.35rem !important;
+  font-weight: 600;
+  color: var(--text-muted);
+}
+
+.qs-sub {
+  margin-top: 0.6rem !important;
+  font-size: 0.9rem;
+  color: var(--text-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+/* Preset pills */
+
+.preset-pills {
   display: flex;
   flex-wrap: wrap;
+  justify-content: center;
   gap: 0.5rem;
 }
 
-.chip {
+.preset-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 0.55rem 0.5rem 1rem;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: var(--surface);
+  font-weight: 600;
+  transition: border-color 0.15s, background 0.15s, color 0.15s;
+}
+
+.preset-pill:hover {
+  border-color: var(--accent);
+}
+
+.preset-pill-count {
+  min-width: 1.8rem;
+  padding: 0.1rem 0.45rem;
+  border-radius: 999px;
+  background: var(--surface-2);
+  font-size: 0.8rem;
+  font-variant-numeric: tabular-nums;
+  color: var(--text-muted);
+}
+
+.preset-pill-active {
+  border-color: transparent;
+  background: linear-gradient(135deg, var(--accent), var(--accent-2));
+  color: #fff;
+  box-shadow: 0 4px 16px rgb(var(--glow) / calc(0.3 * var(--glow-strength)));
+}
+
+.preset-pill-active .preset-pill-count {
+  background: rgb(255 255 255 / 0.22);
+  color: #fff;
+}
+
+/* Attendee list (quick start and meter) */
+
+.attendee-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  background: var(--surface);
+}
+
+.attendee-list li {
+  padding: 0.55rem 0.75rem 0.55rem 1rem;
+  transition: opacity 0.15s;
+}
+
+.attendee-list li + li {
+  border-top: 1px solid var(--border);
+}
+
+.attendee-list .stepper-compact label {
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
-  gap: 0.1rem;
-  border: 1px solid var(--border);
-  background: var(--surface-2);
-  border-radius: 12px;
-  padding: 0.5rem 0.9rem;
+  min-width: 0;
+  line-height: 1.25;
+}
+
+.attendee-name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
   font-weight: 600;
-  text-align: left;
+  color: var(--text);
 }
 
-.chip-meta {
-  font-size: 0.75rem;
-  font-weight: 400;
+.attendee-rate {
+  font-size: 0.8rem;
   color: var(--text-muted);
 }
 
-.chip-active {
-  border-color: var(--accent);
-  background: rgb(var(--glow) / 0.1);
+/* Roles nobody brings are dimmed so the actual attendees stand out. */
+.attendee-absent {
+  opacity: 0.55;
 }
 
-.preview {
-  margin: 0;
-  text-align: center;
-  color: var(--text-muted);
-}
-
-.preview strong {
-  color: var(--accent);
-  font-size: 1.2rem;
+.attendee-absent:focus-within,
+.attendee-absent:hover {
+  opacity: 1;
 }
 
 /* Meter */
@@ -374,7 +461,6 @@ main {
 
 .counter {
   position: relative;
-  font-size: clamp(2.8rem, 14vw, 6.5rem);
   font-weight: 800;
   letter-spacing: -0.03em;
   font-variant-numeric: tabular-nums;
@@ -395,6 +481,7 @@ main {
   grid-template-columns: repeat(3, 1fr);
   gap: 0.75rem;
   width: 100%;
+  max-width: 420px;
   margin: 0;
 }
 
@@ -427,26 +514,88 @@ main {
   max-width: 360px;
 }
 
-.summary {
+.summary-wrap {
   width: 100%;
-  font-size: 1.1rem;
+  max-width: 420px;
 }
 
-.summary p {
-  margin: 0 0 1rem;
+.summary {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
 }
 
-.summary strong {
-  color: var(--accent);
+.summary-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 1.5rem 1.25rem 1.25rem;
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  background: var(--surface);
 }
 
-.comparison {
-  font-size: 1.4rem;
-  font-weight: 700;
+.summary-card p {
+  margin: 0;
 }
 
-.comparison-emoji {
-  font-size: 1.8rem;
+.summary-emojis {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.1rem;
+  margin-bottom: 0.5rem;
+  font-size: 2.25rem;
+  line-height: 1.1;
+}
+
+.summary-emojis-single {
+  font-size: 3.5rem;
+}
+
+.summary-emojis span {
+  display: inline-block;
+}
+
+.summary-kicker {
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.summary-headline {
+  font-size: 1.6rem;
+  font-weight: 800;
+  letter-spacing: -0.01em;
+}
+
+.summary-sub {
+  color: var(--text-muted);
+}
+
+/* Who was there, separated like the bottom of a receipt. */
+.summary-chips {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.35rem;
+  width: 100%;
+  margin-top: 0.9rem;
+  padding-top: 1rem;
+  border-top: 1px dashed var(--border);
+}
+
+.summary-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.6rem;
+}
+
+.summary-actions .btn {
+  padding: 0.8rem 1rem;
 }
 
 /* Money rain */
@@ -497,60 +646,358 @@ main {
 .settings {
   display: flex;
   flex-direction: column;
-  gap: 1rem;
+  gap: 1.75rem;
+  width: 100%;
 }
 
-.preset-list {
+.settings-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.settings-label {
+  margin: 0 0 0 0.25rem;
+  font-size: 0.75rem;
+  letter-spacing: 0.1em;
+}
+
+.settings-hint {
+  margin: -0.25rem 0 0.25rem 0.25rem;
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+
+/* Grouped list, like native settings screens: rows separated by hairlines. */
+.settings-list {
   list-style: none;
-  margin: 0 0 1rem;
+  margin: 0;
   padding: 0;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  background: var(--surface);
 }
 
-.preset-list li {
+.settings-list > * + * {
+  border-top: 1px solid var(--border);
+}
+
+.settings-row {
+  padding: 0.75rem 1rem;
+}
+
+.settings-row-stacked {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.settings-row-title,
+.settings-row .stepper-compact label {
+  font-weight: 600;
+  color: var(--text);
+}
+
+.settings-item {
   overflow: hidden;
 }
 
-.preset-edit {
+.role-row {
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr auto;
-  align-items: end;
-  gap: 0.75rem;
-  padding: 0.75rem 0;
-  border-bottom: 1px solid var(--border);
+  grid-template-columns: 1fr auto auto;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.55rem 0.6rem 0.55rem 1rem;
 }
 
-.preset-name {
-  min-height: 2.6rem;
-  border-radius: 10px;
-  border: 1px solid var(--border);
-  background: var(--bg);
-  padding: 0 0.75rem;
+/* Text field that looks like plain text until hovered or focused. */
+.inline-input {
+  min-width: 0;
+  margin-left: -0.5rem;
+  padding: 0.4rem 0.5rem;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  background: transparent;
   font-weight: 600;
+}
+
+.inline-input:hover {
+  border-color: var(--border);
+}
+
+.inline-input:focus {
+  border-color: var(--accent);
+  background: var(--bg);
+}
+
+.inline-input-boxed {
+  margin-left: 0;
+  padding: 0.55rem 0.75rem;
+  border-color: var(--border);
+  background: var(--bg);
+}
+
+.icon-button {
+  width: 2rem;
+  height: 2rem;
+  border: none;
+  border-radius: 8px;
+  background: transparent;
+  opacity: 0.7;
+}
+
+.icon-button:hover:not(:disabled) {
+  background: var(--surface-2);
+  opacity: 1;
+}
+
+.icon-button:disabled {
+  opacity: 0.2;
+}
+
+.settings-add,
+.preset-row {
+  width: 100%;
+  padding: 0.8rem 1rem;
+  border: none;
+  background: transparent;
+  text-align: left;
+  font-weight: 600;
+}
+
+.settings-add {
+  color: var(--accent);
+}
+
+.settings-add:hover,
+.preset-row:hover {
+  background: var(--surface-2);
+}
+
+.preset-row {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.preset-row-text {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
   min-width: 0;
 }
 
+.preset-row-meta {
+  font-size: 0.8rem;
+  font-weight: 400;
+  color: var(--text-muted);
+}
+
+.preset-editor {
+  overflow: hidden;
+}
+
+.preset-editor-inner {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  padding: 0.25rem 1rem 1rem;
+}
+
+.preset-editor .attendee-list {
+  background: var(--bg);
+}
+
+.text-button {
+  align-self: flex-start;
+  padding: 0.4rem 0;
+  border: none;
+  background: transparent;
+  font-weight: 600;
+  color: var(--text-muted);
+}
+
+.text-button-danger {
+  color: var(--danger);
+}
+
+.settings-reset {
+  align-self: center;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+/* A compact stepper with a unit needs room for the number next to "€/h". */
+.stepper-compact .stepper-input:has(.stepper-suffix) {
+  flex-basis: 5.2rem;
+}
+
+.attendees {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  width: 100%;
+}
+
+.attendees-toggle {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 0.6rem 0.6rem;
+  width: 100%;
+  padding: 0.85rem 1rem;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  background: var(--surface);
+  text-align: left;
+  transition: border-color 0.15s;
+}
+
+.attendees-toggle:hover {
+  border-color: var(--accent);
+}
+
+.attendees-icon {
+  font-size: 1.1rem;
+}
+
+.attendees-count {
+  font-weight: 700;
+}
+
+.attendees-summary {
+  display: flex;
+  grid-column: 1 / -1;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  min-width: 0;
+}
+
+.attendees-nobody {
+  color: var(--text-muted);
+}
+
+.attendee-chip {
+  padding: 0.2rem 0.6rem;
+  border-radius: 999px;
+  background: var(--surface-2);
+  font-size: 0.85rem;
+  white-space: nowrap;
+}
+
+.attendee-chip b {
+  margin-right: 0.2rem;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+  color: var(--accent);
+}
+
+.attendees-action {
+  flex-shrink: 0;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--accent);
+}
+
+.chevron {
+  display: inline-block;
+  transition: transform 0.2s;
+}
+
+.chevron-open {
+  transform: rotate(180deg);
+}
+
+.attendees-panel {
+  overflow: hidden;
+}
+
+/* Meter: only a quiet link, the counter keeps the focus. */
+.attendees-minimal .attendees-toggle {
+  display: inline-flex;
+  align-self: center;
+  width: auto;
+  padding: 0.4rem 0.8rem;
+  border-color: transparent;
+  background: transparent;
+}
+
+/* Compact stepper: one row, label left, small controls right. */
+.stepper-compact {
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  text-align: left;
+}
+
+.stepper-compact label {
+  font-size: 0.9rem;
+}
+
+.stepper-compact .stepper-controls {
+  flex-shrink: 0;
+}
+
+.stepper-compact .stepper-controls > button {
+  width: 2rem;
+  height: 2rem;
+  font-size: 1.1rem;
+}
+
+.stepper-compact .stepper-input {
+  flex: 0 0 3.2rem;
+}
+
+.stepper-compact .stepper-input input {
+  min-height: 2rem;
+  font-size: 1rem;
+}
+
+
+/* Phones: the settings button shrinks to its icon so the header stays on one line,
+   and the quick start card gives its content more width. */
+@media (max-width: 480px) {
+  /* Role rates are typed directly on phones, which leaves room for the role name. */
+  .role-row .stepper-controls > button {
+    display: none;
+  }
+
+  /* Options size to their text so none of them wraps. */
+  .segmented {
+    display: flex;
+  }
+
+  .segmented button {
+    flex: 1 1 auto;
+    padding: 0.55rem 0.4rem;
+    font-size: 0.85rem;
+    white-space: nowrap;
+  }
+
+  .preset-pills {
+    gap: 0.4rem;
+  }
+
+  .preset-pill {
+    padding: 0.45rem 0.45rem 0.45rem 0.8rem;
+    font-size: 0.9rem;
+  }
+
+  .nav-label {
+    display: none;
+  }
+}
+
 @media (max-width: 600px) {
-  /* Name + delete on one row, each stepper full width below: half-width
-     steppers are too narrow to show a 2–3 digit rate next to its suffix. */
-  .preset-edit {
-    grid-template-columns: 1fr auto;
-  }
-
-  .preset-name {
-    grid-row: 1;
-    grid-column: 1;
-    min-height: 2.6rem;
-  }
-
-  .preset-edit .btn-icon {
-    grid-row: 1;
-    grid-column: 2;
-  }
-
-  .preset-edit .stepper {
-    grid-column: 1 / -1;
-  }
-
   .stats dt {
     font-size: 0.65rem;
   }
@@ -592,8 +1039,3 @@ main {
   position: relative;
 }
 
-.hint {
-  margin: 0.75rem 0 0;
-  font-size: 0.85rem;
-  color: var(--text-muted);
-}

@@ -19,38 +19,40 @@ test('runs a meeting: counts, pauses, changes headcount and ends', async ({ page
   await page.goto('/')
   await page.clock.pauseAt(new Date('2026-01-01T09:00:01'))
 
-  // Teammeeting preset: 8 people × 75 €/h = 10 €/min
+  // Teammeeting preset: 6 × Developer (50) + 1 × Product Owner (55) + 1 × Scrum Master (50) = 405 €/h
   await page.getByRole('button', { name: /Teammeeting/ }).click()
-  await expect(page.getByText('10,00 € pro Minute')).toBeVisible()
+  await expect(page.locator('.qs-price')).toHaveText('6,75 €')
   await page.getByRole('button', { name: 'Meeting starten' }).click()
   await page.clock.runFor(1000) // page transition
   await expect(page.locator('.counter')).toBeVisible()
 
-  // 6 seconds at 10 €/min = 1 €
+  // 6 seconds at 405 €/h = 0,675 €
   const start = await readCounter(page)
   await page.clock.runFor(6000)
   await page.getByRole('button', { name: /Pause/ }).click()
   // Let the pause settle: the timer replaces the last frame's value with the exact time.
   await page.clock.runFor(100)
   const afterRunning = await readCounter(page)
-  expect(afterRunning - start).toBeCloseTo(1, 1)
+  expect(afterRunning - start).toBeCloseTo(405 / 600, 1)
 
-  // Paused time costs nothing
+  // Paused time costs nothing (meanwhile, open the collapsed attendee panel)
+  await page.getByRole('button', { name: /anpassen/i }).click()
   await page.clock.runFor(30_000)
   expect(await readCounter(page)).toBe(afterRunning)
 
-  // Double the headcount: only the future gets more expensive (2 € per 6 s)
+  // A second product owner joins: only the future gets more expensive (460 €/h)
   await page.getByRole('button', { name: /Weiter/ }).click()
-  await page.getByLabel('Personen im Raum', { exact: true }).fill('16')
+  await page.getByLabel('Product Owner · 55 €/h', { exact: true }).fill('2')
   await page.clock.runFor(6000)
   await page.getByRole('button', { name: /Beenden/ }).click()
   await page.clock.runFor(100)
   const total = await readCounter(page)
-  expect(total - afterRunning).toBeCloseTo(2, 1)
+  expect(total - afterRunning).toBeCloseTo(460 / 600, 1)
 
   // Summary (under 3,50 € there is no comparison yet)
   await page.clock.runFor(1000)
-  await expect(page.getByText('16 Personen')).toBeVisible()
+  await expect(page.locator('.stats > div').filter({ hasText: 'Personen' }).locator('dd')).toHaveText('9')
+  await expect(page.locator('.summary .attendee-chip')).toHaveText(['6 Developer', '2 Product Owner', '1 Scrum Master'])
   await expect(page.getByText('Nicht mal ein Kaffee')).toBeVisible()
 
   // "Nochmal gleich" starts over at zero
@@ -66,12 +68,15 @@ test.describe('language', () => {
   test('is detected from the browser and can be changed in the settings', async ({ page }) => {
     await page.goto('/')
     await expect(page.getByRole('button', { name: 'Start meeting' })).toBeVisible()
-    await expect(page.getByText('€8.00 per minute')).toBeVisible()
+    await expect(page.locator('.qs-price')).toHaveText('€5.00')
+    await expect(page.getByText('per minute')).toBeVisible()
+    await expect(page.getByText('€300 per hour')).toBeVisible()
+    await expect(page.getByText('6 people')).toBeVisible()
     await expect(page.locator('html')).toHaveAttribute('lang', 'en')
 
     await page.getByRole('button', { name: /Settings/ }).click()
     await page.getByRole('radio', { name: 'Deutsch' }).click()
-    await expect(page.getByRole('heading', { name: 'Sprache' })).toBeVisible()
+    await expect(page.getByRole('heading', { name: 'Allgemein' })).toBeVisible()
 
     // The choice survives a reload, overriding the browser language
     await page.reload()
