@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { AnimatePresence, motion } from 'motion/react'
 import { Meter } from './components/Meter'
 import { QuickStart, type MeetingConfig } from './components/QuickStart'
@@ -20,6 +20,12 @@ function App() {
   const [meeting, setMeeting] = useState<MeetingConfig | null>(null)
   // Changing the key remounts <Meter>, which restarts the timer from zero.
   const [meetingRun, setMeetingRun] = useState(0)
+
+  useEffect(() => {
+    const root = document.documentElement
+    if (settings.theme === 'system') delete root.dataset.theme
+    else root.dataset.theme = settings.theme
+  }, [settings.theme])
 
   const startMeeting = (config: MeetingConfig) => {
     setMeeting(config)

@@ -1,6 +1,12 @@
 import { AnimatePresence, motion } from 'motion/react'
-import { LIMITS, type Preset, type Settings as SettingsType } from '../lib/settings'
+import { LIMITS, THEMES, type Preset, type Settings as SettingsType, type Theme } from '../lib/settings'
 import { Stepper } from './Stepper'
+
+const THEME_LABELS: Record<Theme, string> = {
+  system: '🖥️ Automatisch',
+  light: '☀️ Hell',
+  dark: '🌙 Dunkel',
+}
 
 type SettingsProps = {
   settings: SettingsType
@@ -29,6 +35,28 @@ export function Settings({ settings, onChange, onReset }: SettingsProps) {
 
   return (
     <div className="settings">
+      <section className="card">
+        <h2>Darstellung</h2>
+        <div className="segmented" role="radiogroup" aria-label="Farbschema">
+          {THEMES.map((theme) => (
+            <button
+              key={theme}
+              type="button"
+              role="radio"
+              aria-checked={settings.theme === theme}
+              className={settings.theme === theme ? 'segmented-active' : ''}
+              onClick={() => update({ theme })}
+            >
+              {settings.theme === theme && (
+                <motion.span layoutId="segmented-indicator" className="segmented-indicator" />
+              )}
+              <span className="segmented-label">{THEME_LABELS[theme]}</span>
+            </button>
+          ))}
+        </div>
+        <p className="hint">„Automatisch“ folgt der Einstellung deines Systems.</p>
+      </section>
+
       <section className="card">
         <h2>Standardwerte</h2>
         <div className="stepper-row">

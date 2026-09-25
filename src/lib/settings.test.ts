@@ -20,6 +20,7 @@ describe('settings', () => {
   it('round-trips saved settings', () => {
     const storage = memoryStorage()
     const custom: Settings = {
+      theme: 'light',
       defaultPeople: 3,
       defaultHourlyRate: 120,
       billValue: 50,
@@ -40,10 +41,11 @@ describe('settings', () => {
     const storage = memoryStorage({
       [SETTINGS_KEY]: JSON.stringify({
         version: 1,
-        settings: { defaultPeople: -4, defaultHourlyRate: 'abc', billValue: 20, presets: [{ id: 1 }] },
+        settings: { theme: 'neon', defaultPeople: -4, defaultHourlyRate: 'abc', billValue: 20, presets: [{ id: 1 }] },
       }),
     })
     expect(loadSettings(storage)).toEqual({
+      theme: 'system',
       defaultPeople: 1,
       defaultHourlyRate: DEFAULT_SETTINGS.defaultHourlyRate,
       billValue: 20,

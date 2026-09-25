@@ -5,7 +5,11 @@ export type Preset = {
   hourlyRate: number
 }
 
+export const THEMES = ['system', 'light', 'dark'] as const
+export type Theme = (typeof THEMES)[number]
+
 export type Settings = {
+  theme: Theme
   defaultPeople: number
   defaultHourlyRate: number
   /** Every time this many euros are burned, a bill falls from the sky. */
@@ -24,6 +28,7 @@ export const LIMITS = {
 }
 
 export const DEFAULT_SETTINGS: Settings = {
+  theme: 'system',
   defaultPeople: 6,
   defaultHourlyRate: 80,
   billValue: 10,
@@ -66,6 +71,7 @@ export function sanitizeSettings(value: unknown): Settings {
   if (typeof value !== 'object' || value === null) return DEFAULT_SETTINGS
   const s = value as Record<string, unknown>
   return {
+    theme: THEMES.includes(s.theme as Theme) ? (s.theme as Theme) : DEFAULT_SETTINGS.theme,
     defaultPeople: clampNumber(s.defaultPeople, LIMITS.people, DEFAULT_SETTINGS.defaultPeople),
     defaultHourlyRate: clampNumber(s.defaultHourlyRate, LIMITS.hourlyRate, DEFAULT_SETTINGS.defaultHourlyRate),
     billValue: clampNumber(s.billValue, LIMITS.billValue, DEFAULT_SETTINGS.billValue),

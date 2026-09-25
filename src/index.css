@@ -1,3 +1,5 @@
+/* Dark is the base theme. Light applies when the OS prefers it (and the user
+   hasn't forced dark), or when forced via <html data-theme="light">. */
 :root {
   --bg: #0e0b0a;
   --surface: #1a1412;
@@ -7,7 +9,12 @@
   --text-muted: #b09a90;
   --accent: #ff7a1a;
   --accent-2: #ff3d2e;
+  --counter-top: #ffd27a;
   --danger: #e5484d;
+  --danger-text: #ffb4b0;
+  --glow: 255 90 20;
+  --glow-strength: 1;
+  --shadow: 0 0 0;
   --bill: #6fbf73;
   --bill-dark: #2f6b33;
   --radius: 14px;
@@ -19,6 +26,44 @@
   -webkit-font-smoothing: antialiased;
 }
 
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme='dark']) {
+    --bg: #fbf6f2;
+    --surface: #ffffff;
+    --surface-2: #f5ece6;
+    --border: #e8d8ce;
+    --text: #2a1d17;
+    --text-muted: #7c655b;
+    --accent: #e85d04;
+    --accent-2: #d62a1c;
+    --counter-top: #ff9f2e;
+    --danger: #d1343a;
+    --danger-text: #b4232a;
+    --glow-strength: 0.55;
+    --shadow: 90 50 30;
+
+    color-scheme: light;
+  }
+}
+
+:root[data-theme='light'] {
+  --bg: #fbf6f2;
+  --surface: #ffffff;
+  --surface-2: #f5ece6;
+  --border: #e8d8ce;
+  --text: #2a1d17;
+  --text-muted: #7c655b;
+  --accent: #e85d04;
+  --accent-2: #d62a1c;
+  --counter-top: #ff9f2e;
+  --danger: #d1343a;
+  --danger-text: #b4232a;
+  --glow-strength: 0.55;
+  --shadow: 90 50 30;
+
+  color-scheme: light;
+}
+
 * {
   box-sizing: border-box;
 }
@@ -27,7 +72,7 @@ body {
   margin: 0;
   min-height: 100vh;
   background:
-    radial-gradient(ellipse at 50% 120%, rgb(255 90 20 / 0.18), transparent 60%),
+    radial-gradient(ellipse at 50% 120%, rgb(var(--glow) / calc(0.18 * var(--glow-strength))), transparent 60%),
     var(--bg);
   overflow-x: hidden;
 }
@@ -102,7 +147,7 @@ main {
 
 .logo-flame {
   display: inline-block;
-  filter: drop-shadow(0 0 8px rgb(255 122 26 / 0.7));
+  filter: drop-shadow(0 0 8px rgb(var(--glow) / calc(0.7 * var(--glow-strength))));
 }
 
 .card {
@@ -138,12 +183,12 @@ main {
   border: none;
   background: linear-gradient(135deg, var(--accent), var(--accent-2));
   color: #fff;
-  box-shadow: 0 6px 24px rgb(255 80 20 / 0.35);
+  box-shadow: 0 6px 24px rgb(var(--glow) / calc(0.35 * var(--glow-strength)));
 }
 
 .btn-danger {
   border-color: var(--danger);
-  color: #ffb4b0;
+  color: var(--danger-text);
 }
 
 .btn-ghost {
@@ -278,7 +323,7 @@ main {
 
 .chip-active {
   border-color: var(--accent);
-  background: rgb(255 122 26 / 0.12);
+  background: rgb(var(--glow) / 0.1);
 }
 
 .preview {
@@ -322,7 +367,7 @@ main {
   position: absolute;
   inset: 10% 15%;
   border-radius: 50%;
-  background: radial-gradient(closest-side, rgb(255 90 20 / 0.55), transparent);
+  background: radial-gradient(closest-side, rgb(var(--glow) / calc(0.55 * var(--glow-strength))), transparent);
   filter: blur(24px);
   pointer-events: none;
 }
@@ -334,7 +379,7 @@ main {
   letter-spacing: -0.03em;
   font-variant-numeric: tabular-nums;
   line-height: 1;
-  background: linear-gradient(180deg, #ffd27a, var(--accent) 45%, var(--accent-2));
+  background: linear-gradient(180deg, var(--counter-top), var(--accent) 45%, var(--accent-2));
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
@@ -429,7 +474,7 @@ main {
     radial-gradient(circle at 50% 50%, var(--bill) 0 11px, transparent 12px),
     linear-gradient(135deg, #8fd48f, var(--bill) 50%, #4f9a53);
   border: 2px solid var(--bill-dark);
-  box-shadow: 0 4px 12px rgb(0 0 0 / 0.4);
+  box-shadow: 0 4px 12px rgb(var(--shadow) / 0.3);
   display: grid;
   place-items: center;
 }
@@ -500,4 +545,46 @@ main {
   .stats dt {
     font-size: 0.65rem;
   }
+}
+
+.segmented {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.25rem;
+  padding: 0.25rem;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  background: var(--bg);
+}
+
+.segmented button {
+  position: relative;
+  border: none;
+  background: transparent;
+  border-radius: 9px;
+  padding: 0.6rem 0.4rem;
+  font-weight: 600;
+  color: var(--text-muted);
+}
+
+.segmented button.segmented-active {
+  color: var(--text);
+}
+
+.segmented-indicator {
+  position: absolute;
+  inset: 0;
+  border-radius: 9px;
+  background: var(--surface-2);
+  border: 1px solid var(--accent);
+}
+
+.segmented-label {
+  position: relative;
+}
+
+.hint {
+  margin: 0.75rem 0 0;
+  font-size: 0.85rem;
+  color: var(--text-muted);
 }
