@@ -1,17 +1,19 @@
 # 🔥 Burn Rate Meter
 
-Wie viel Geld verbrennt dieses Meeting gerade? Personen und groben Stundensatz wählen, Meeting starten – und zusehen, wie die Scheine fallen.
+How much money is this meeting burning right now? Pick the number of people and a rough hourly rate, start the meeting – and watch the bills fall.
 
-*A small fun side project: a live meeting cost meter built with React and Motion.*
+A small, fun side project: a live meeting cost meter built with React and Motion.
 
 ## Features
 
-- **Schnellstart:** pick the number of colleagues and an hourly rate, or use a preset (Teammeeting, ART-Meeting, Bereichscall)
-- **Live-Zähler:** a ticking € counter with falling bills (one per X €), pause/resume, and headcount changes mid-meeting
-- **Zusammenfassung:** total, duration and a comparison ("Das sind 🍕 12 Pizzen!")
-- **Einstellungen:** default meeting size, hourly rate, bill value and your own presets, saved in the browser (localStorage)
+- **Quick start:** choose the number of colleagues and an hourly rate, or use a preset (e.g. team meeting, ART meeting, department call)
+- **Live counter:** a ticking € counter with falling bills (one per X €), pause/resume, and headcount changes mid-meeting
+- **Summary:** total cost, duration and a comparison ("That's 🍕 12 pizzas!")
+- **Settings:** default meeting size, hourly rate, bill value and your own presets, saved in the browser (localStorage)
+- **German & English:** detected automatically from your browser/system language, or set it in the settings
+- **Light & dark mode:** follows your system by default, or pick one in the settings
 
-## Entwicklung
+## Development
 
 ```bash
 npm install
@@ -20,3 +22,5 @@ npm test         # unit tests (Vitest)
 npm run lint     # oxlint
 npm run build    # type-check + production build
 ```
+
+Built with Vite, React, TypeScript and [Motion](https://motion.dev).
