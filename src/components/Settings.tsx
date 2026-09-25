@@ -1,12 +1,9 @@
 import { AnimatePresence, motion } from 'motion/react'
-import { LIMITS, THEMES, type Preset, type Settings as SettingsType, type Theme } from '../lib/settings'
+import { LANGUAGES } from '../i18n/locale'
+import { useI18n } from '../i18n/useI18n'
+import { LIMITS, THEMES, type Preset, type Settings as SettingsType } from '../lib/settings'
+import { Segmented } from './Segmented'
 import { Stepper } from './Stepper'
-
-const THEME_LABELS: Record<Theme, string> = {
-  system: '🖥️ Automatisch',
-  light: '☀️ Hell',
-  dark: '🌙 Dunkel',
-}
 
 type SettingsProps = {
   settings: SettingsType
@@ -15,6 +12,7 @@ type SettingsProps = {
 }
 
 export function Settings({ settings, onChange, onReset }: SettingsProps) {
+  const { t } = useI18n()
   const update = (patch: Partial<SettingsType>) => onChange({ ...settings, ...patch })
 
   const updatePreset = (id: string, patch: Partial<Preset>) =>
@@ -26,7 +24,7 @@ export function Settings({ settings, onChange, onReset }: SettingsProps) {
         ...settings.presets,
         {
           id: crypto.randomUUID(),
-          name: 'Neue Vorlage',
+          name: t.settings.newPresetName,
           people: settings.defaultPeople,
           hourlyRate: settings.defaultHourlyRate,
         },
@@ -36,38 +34,42 @@ export function Settings({ settings, onChange, onReset }: SettingsProps) {
   return (
     <div className="settings">
       <section className="card">
-        <h2>Darstellung</h2>
-        <div className="segmented" role="radiogroup" aria-label="Farbschema">
-          {THEMES.map((theme) => (
-            <button
-              key={theme}
-              type="button"
-              role="radio"
-              aria-checked={settings.theme === theme}
-              className={settings.theme === theme ? 'segmented-active' : ''}
-              onClick={() => update({ theme })}
-            >
-              {settings.theme === theme && (
-                <motion.span layoutId="segmented-indicator" className="segmented-indicator" />
-              )}
-              <span className="segmented-label">{THEME_LABELS[theme]}</span>
-            </button>
-          ))}
-        </div>
-        <p className="hint">„Automatisch“ folgt der Einstellung deines Systems.</p>
+        <h2>{t.settings.appearance}</h2>
+        <Segmented
+          name="theme"
+          label={t.settings.themeLabel}
+          options={THEMES}
+          labels={t.settings.themes}
+          value={settings.theme}
+          onChange={(theme) => update({ theme })}
+        />
+        <p className="hint">{t.settings.themeHint}</p>
       </section>
 
       <section className="card">
-        <h2>Standardwerte</h2>
+        <h2>{t.settings.language}</h2>
+        <Segmented
+          name="language"
+          label={t.settings.language}
+          options={LANGUAGES}
+          labels={t.settings.languages}
+          value={settings.language}
+          onChange={(language) => update({ language })}
+        />
+        <p className="hint">{t.settings.languageHint}</p>
+      </section>
+
+      <section className="card">
+        <h2>{t.settings.defaults}</h2>
         <div className="stepper-row">
           <Stepper
-            label="Meetinggröße"
+            label={t.settings.meetingSize}
             value={settings.defaultPeople}
             onChange={(defaultPeople) => update({ defaultPeople })}
             {...LIMITS.people}
           />
           <Stepper
-            label="Stundensatz"
+            label={t.settings.hourlyRate}
             value={settings.defaultHourlyRate}
             onChange={(defaultHourlyRate) => update({ defaultHourlyRate })}
             step={5}
@@ -75,7 +77,7 @@ export function Settings({ settings, onChange, onReset }: SettingsProps) {
             {...LIMITS.hourlyRate}
           />
           <Stepper
-            label="Ein Geldschein pro"
+            label={t.settings.billValue}
             value={settings.billValue}
             onChange={(billValue) => update({ billValue })}
             step={5}
@@ -86,7 +88,7 @@ export function Settings({ settings, onChange, onReset }: SettingsProps) {
       </section>
 
       <section className="card">
-        <h2>Vorlagen</h2>
+        <h2>{t.settings.presets}</h2>
         <ul className="preset-list">
           <AnimatePresence initial={false}>
             {settings.presets.map((preset) => (
@@ -100,18 +102,18 @@ export function Settings({ settings, onChange, onReset }: SettingsProps) {
                 <div className="preset-edit">
                   <input
                     className="preset-name"
-                    aria-label="Name der Vorlage"
+                    aria-label={t.settings.presetName}
                     value={preset.name}
                     onChange={(e) => updatePreset(preset.id, { name: e.target.value })}
                   />
                   <Stepper
-                    label="Personen"
+                    label={t.settings.people}
                     value={preset.people}
                     onChange={(people) => updatePreset(preset.id, { people })}
                     {...LIMITS.people}
                   />
                   <Stepper
-                    label="Stundensatz"
+                    label={t.settings.hourlyRate}
                     value={preset.hourlyRate}
                     onChange={(hourlyRate) => updatePreset(preset.id, { hourlyRate })}
                     step={5}
@@ -121,7 +123,7 @@ export function Settings({ settings, onChange, onReset }: SettingsProps) {
                   <button
                     type="button"
                     className="btn btn-icon"
-                    aria-label={`${preset.name} löschen`}
+                    aria-label={t.settings.deletePreset(preset.name)}
                     onClick={() => update({ presets: settings.presets.filter((p) => p.id !== preset.id) })}
                   >
                     🗑
@@ -132,7 +134,7 @@ export function Settings({ settings, onChange, onReset }: SettingsProps) {
           </AnimatePresence>
         </ul>
         <button type="button" className="btn" onClick={addPreset}>
-          + Vorlage hinzufügen
+          {t.settings.addPreset}
         </button>
       </section>
 
@@ -141,10 +143,10 @@ export function Settings({ settings, onChange, onReset }: SettingsProps) {
           type="button"
           className="btn btn-ghost"
           onClick={() => {
-            if (confirm('Alle Einstellungen auf Standard zurücksetzen?')) onReset()
+            if (confirm(t.settings.resetConfirm)) onReset()
           }}
         >
-          Auf Standard zurücksetzen
+          {t.settings.reset}
         </button>
       </div>
     </div>

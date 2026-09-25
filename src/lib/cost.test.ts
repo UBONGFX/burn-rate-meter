@@ -29,9 +29,11 @@ describe('cost', () => {
     expect(costAt(120_000, second)).toBeCloseTo(8 + 16)
   })
 
-  it('formats euros in German style', () => {
-    expect(formatEUR(1234.5)).toBe('1.234,50 €')
-    expect(formatEUR(1234.5, { rounded: true })).toBe('1.235 €')
+  it('formats euros per locale', () => {
+    expect(formatEUR(1234.5, { locale: 'de' })).toBe('1.234,50\u00a0€')
+    expect(formatEUR(1234.5, { locale: 'de', rounded: true })).toBe('1.235\u00a0€')
+    expect(formatEUR(1234.5, { locale: 'en' })).toBe('€1,234.50')
+    expect(formatEUR(1234.5, { locale: 'en', rounded: true })).toBe('€1,235')
   })
 
   it('formats durations', () => {
@@ -42,7 +44,7 @@ describe('cost', () => {
 
   it('picks the most expensive affordable comparison', () => {
     expect(compareCost(2)).toBeNull()
-    expect(compareCost(23)).toEqual({ emoji: '🍕', count: 2, label: 'Pizzen' })
-    expect(compareCost(1300)).toEqual({ emoji: '💻', count: 1, label: 'Laptop' })
+    expect(compareCost(23)).toEqual({ key: 'pizza', emoji: '🍕', count: 2 })
+    expect(compareCost(1300)).toEqual({ key: 'laptop', emoji: '💻', count: 1 })
   })
 })

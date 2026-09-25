@@ -1,7 +1,8 @@
 import { useState } from 'react'
 import { AnimatePresence, motion, useReducedMotion } from 'motion/react'
 import { useMeetingTimer } from '../hooks/useMeetingTimer'
-import { changeHeadcount, compareCost, costAt, costPerMinute, formatDuration, formatEUR, startSegment } from '../lib/cost'
+import { useI18n } from '../i18n/useI18n'
+import { changeHeadcount, compareCost, costAt, costPerMinute, formatDuration, startSegment } from '../lib/cost'
 import { LIMITS } from '../lib/settings'
 import { MoneyRain } from './MoneyRain'
 import type { MeetingConfig } from './QuickStart'
@@ -15,6 +16,7 @@ type MeterProps = {
 }
 
 export function Meter({ config, billValue, onRestart, onNew }: MeterProps) {
+  const { t, formatEUR } = useI18n()
   const { status, elapsedMs, now, pause, resume, stop } = useMeetingTimer()
   const [segment, setSegment] = useState(() => startSegment(config.people, config.hourlyRate))
   const reduceMotion = useReducedMotion()
@@ -22,13 +24,14 @@ export function Meter({ config, billValue, onRestart, onNew }: MeterProps) {
   const cost = costAt(elapsedMs, segment)
   const billCount = Math.floor(cost / billValue)
   const comparison = compareCost(cost)
+  const summary = t.meter.summary(formatDuration(elapsedMs), segment.people)
 
   return (
     <section className="meter">
       <MoneyRain count={status === 'ended' ? 0 : billCount} billValue={billValue} />
 
       <p className="meter-label">
-        {config.name ?? 'Meeting'} · {status === 'ended' ? 'Endstand' : status === 'paused' ? 'Pausiert' : 'Verbrannt'}
+        {config.name ?? t.meter.defaultName} · {t.meter.status[status]}
       </p>
 
       <div className="counter-wrap">
@@ -53,15 +56,15 @@ export function Meter({ config, billValue, onRestart, onNew }: MeterProps) {
 
       <dl className="stats">
         <div>
-          <dt>Dauer</dt>
+          <dt>{t.meter.duration}</dt>
           <dd>{formatDuration(elapsedMs)}</dd>
         </div>
         <div>
-          <dt>Pro Minute</dt>
+          <dt>{t.meter.perMinute}</dt>
           <dd>{formatEUR(costPerMinute(segment.people, segment.hourlyRate))}</dd>
         </div>
         <div>
-          <dt>Stundensatz</dt>
+          <dt>{t.meter.hourlyRate}</dt>
           <dd>{formatEUR(segment.hourlyRate, { rounded: true })}</dd>
         </div>
       </dl>
@@ -76,25 +79,25 @@ export function Meter({ config, billValue, onRestart, onNew }: MeterProps) {
             exit={{ opacity: 0, y: -20 }}
           >
             <p>
-              {formatDuration(elapsedMs)} Meeting mit {segment.people} {segment.people === 1 ? 'Person' : 'Personen'} hat{' '}
-              <strong>{formatEUR(cost)}</strong> gekostet.
+              {summary.before} <strong>{formatEUR(cost)}</strong>
+              {summary.after}
             </p>
             <p className="comparison">
               {comparison ? (
                 <>
-                  Das sind <span className="comparison-emoji">{comparison.emoji}</span> {comparison.count}{' '}
-                  {comparison.label}!
+                  {t.meter.comparisonPrefix} <span className="comparison-emoji">{comparison.emoji}</span>{' '}
+                  {comparison.count} {t.comparisons[comparison.key][comparison.count === 1 ? 0 : 1]}!
                 </>
               ) : (
-                'Nicht mal ein Kaffee – gut gemacht! ☕'
+                t.meter.noComparison
               )}
             </p>
             <div className="actions">
               <button type="button" className="btn" onClick={onNew}>
-                Neues Meeting
+                {t.meter.newMeeting}
               </button>
               <button type="button" className="btn btn-primary" onClick={onRestart}>
-                Nochmal gleich
+                {t.meter.sameAgain}
               </button>
             </div>
           </motion.div>
@@ -107,7 +110,7 @@ export function Meter({ config, billValue, onRestart, onNew }: MeterProps) {
             exit={{ opacity: 0, y: -20 }}
           >
             <Stepper
-              label="Personen im Raum"
+              label={t.meter.peopleInRoom}
               value={segment.people}
               onChange={(people) => setSegment((s) => changeHeadcount(s, now(), people))}
               {...LIMITS.people}
@@ -115,15 +118,15 @@ export function Meter({ config, billValue, onRestart, onNew }: MeterProps) {
             <div className="actions">
               {status === 'running' ? (
                 <button type="button" className="btn" onClick={pause}>
-                  ⏸ Pause
+                  {t.meter.pause}
                 </button>
               ) : (
                 <button type="button" className="btn" onClick={resume}>
-                  ▶ Weiter
+                  {t.meter.resume}
                 </button>
               )}
               <button type="button" className="btn btn-danger" onClick={stop}>
-                ⏹ Beenden
+                {t.meter.end}
               </button>
             </div>
           </motion.div>

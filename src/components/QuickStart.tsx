@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { motion } from 'motion/react'
-import { costPerMinute, formatEUR } from '../lib/cost'
+import { useI18n } from '../i18n/useI18n'
+import { costPerMinute } from '../lib/cost'
 import { LIMITS, type Settings } from '../lib/settings'
 import { Stepper } from './Stepper'
 
@@ -16,6 +17,7 @@ type QuickStartProps = {
 }
 
 export function QuickStart({ settings, onStart }: QuickStartProps) {
+  const { t, formatEUR } = useI18n()
   const [people, setPeople] = useState(settings.defaultPeople)
   const [hourlyRate, setHourlyRate] = useState(settings.defaultHourlyRate)
   const [presetId, setPresetId] = useState<string | null>(null)
@@ -26,10 +28,10 @@ export function QuickStart({ settings, onStart }: QuickStartProps) {
 
   return (
     <section className="card quick-start">
-      <h2>Schnellstart</h2>
+      <h2>{t.quickStart.title}</h2>
 
       {settings.presets.length > 0 && (
-        <div className="presets" role="group" aria-label="Vorlagen">
+        <div className="presets" role="group" aria-label={t.quickStart.presets}>
           {settings.presets.map((p) => (
             <motion.button
               key={p.id}
@@ -52,9 +54,9 @@ export function QuickStart({ settings, onStart }: QuickStartProps) {
       )}
 
       <div className="stepper-row">
-        <Stepper label="Personen" value={people} onChange={setPeople} {...LIMITS.people} />
+        <Stepper label={t.quickStart.people} value={people} onChange={setPeople} {...LIMITS.people} />
         <Stepper
-          label="Stundensatz"
+          label={t.quickStart.hourlyRate}
           value={hourlyRate}
           onChange={setHourlyRate}
           step={5}
@@ -64,8 +66,8 @@ export function QuickStart({ settings, onStart }: QuickStartProps) {
       </div>
 
       <p className="preview">
-        ≈ <strong>{formatEUR(costPerMinute(people, hourlyRate))}</strong> pro Minute ·{' '}
-        {formatEUR(people * hourlyRate, { rounded: true })} pro Stunde
+        ≈ <strong>{formatEUR(costPerMinute(people, hourlyRate))}</strong> {t.quickStart.perMinute} ·{' '}
+        {formatEUR(people * hourlyRate, { rounded: true })} {t.quickStart.perHour}
       </p>
 
       <motion.button
@@ -75,7 +77,7 @@ export function QuickStart({ settings, onStart }: QuickStartProps) {
         whileTap={{ scale: 0.97 }}
         onClick={() => onStart({ name: activePreset?.name ?? null, people, hourlyRate })}
       >
-        🔥 Meeting starten
+        {t.quickStart.start}
       </motion.button>
     </section>
   )

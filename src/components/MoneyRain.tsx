@@ -1,6 +1,6 @@
 import { memo, useEffect, useRef, useState } from 'react'
 import { motion, useReducedMotion } from 'motion/react'
-import { formatEUR } from '../lib/cost'
+import { useI18n } from '../i18n/useI18n'
 
 const MAX_BILLS = 30
 // If many bills are due at once (e.g. after a background tab), only drop a few.
@@ -28,6 +28,7 @@ type MoneyRainProps = {
 }
 
 export const MoneyRain = memo(function MoneyRain({ count, billValue }: MoneyRainProps) {
+  const { formatEUR } = useI18n()
   const reduceMotion = useReducedMotion()
   const [bills, setBills] = useState<Bill[]>([])
   const prevCount = useRef(count)

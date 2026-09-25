@@ -1,4 +1,5 @@
 import { useId, useState } from 'react'
+import { useI18n } from '../i18n/useI18n'
 
 type StepperProps = {
   label: string
@@ -11,6 +12,7 @@ type StepperProps = {
 }
 
 export function Stepper({ label, value, onChange, min, max, step = 1, suffix }: StepperProps) {
+  const { t } = useI18n()
   const id = useId()
   // Keep the typed text separately so the field can be empty while editing.
   const [draft, setDraft] = useState(String(value))
@@ -28,7 +30,7 @@ export function Stepper({ label, value, onChange, min, max, step = 1, suffix }: 
       <div className="stepper-controls">
         <button
           type="button"
-          aria-label={`${label} verringern`}
+          aria-label={t.stepper.decrease(label)}
           onClick={() => onChange(clamp(value - step))}
           disabled={value <= min}
         >
@@ -53,7 +55,7 @@ export function Stepper({ label, value, onChange, min, max, step = 1, suffix }: 
         </div>
         <button
           type="button"
-          aria-label={`${label} erhöhen`}
+          aria-label={t.stepper.increase(label)}
           onClick={() => onChange(clamp(value + step))}
           disabled={value >= max}
         >

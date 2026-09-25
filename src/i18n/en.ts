@@ -1,0 +1,81 @@
+import type { Messages } from './de'
+
+const en: Messages = {
+  nav: {
+    settings: '⚙️ Settings',
+    back: '← Back',
+  },
+  stepper: {
+    decrease: (label) => `Decrease ${label}`,
+    increase: (label) => `Increase ${label}`,
+  },
+  quickStart: {
+    title: 'Quick start',
+    presets: 'Presets',
+    people: 'People',
+    hourlyRate: 'Hourly rate',
+    perMinute: 'per minute',
+    perHour: 'per hour',
+    start: '🔥 Start meeting',
+  },
+  meter: {
+    defaultName: 'Meeting',
+    status: { running: 'Burned', paused: 'Paused', ended: 'Final total' },
+    duration: 'Duration',
+    perMinute: 'Per minute',
+    hourlyRate: 'Hourly rate',
+    peopleInRoom: 'People in the room',
+    pause: '⏸ Pause',
+    resume: '▶ Resume',
+    end: '⏹ End',
+    summary: (duration, people) => ({
+      before: `A ${duration} meeting with ${people} ${people === 1 ? 'person' : 'people'} cost`,
+      after: '.',
+    }),
+    comparisonPrefix: "That's",
+    noComparison: 'Not even a coffee – well done! ☕',
+    newMeeting: 'New meeting',
+    sameAgain: 'Same again',
+  },
+  comparisons: {
+    usedCar: ['used car', 'used cars'],
+    holiday: ['package holiday', 'package holidays'],
+    laptop: ['laptop', 'laptops'],
+    bike: ['bike', 'bikes'],
+    headphones: ['pair of headphones', 'pairs of headphones'],
+    pizza: ['pizza', 'pizzas'],
+    doner: ['döner kebab', 'döner kebabs'],
+    coffee: ['coffee', 'coffees'],
+  },
+  settings: {
+    appearance: 'Appearance',
+    themeLabel: 'Color scheme',
+    themes: {
+      system: '🖥️ Automatic',
+      light: '☀️ Light',
+      dark: '🌙 Dark',
+    },
+    themeHint: '“Automatic” follows your system setting.',
+    language: 'Language',
+    languages: {
+      auto: '🌐 Automatic',
+      de: 'Deutsch',
+      en: 'English',
+    },
+    languageHint: '“Automatic” uses your browser or system language.',
+    defaults: 'Defaults',
+    meetingSize: 'Meeting size',
+    hourlyRate: 'Hourly rate',
+    billValue: 'One bill per',
+    presets: 'Presets',
+    presetName: 'Preset name',
+    people: 'People',
+    newPresetName: 'New preset',
+    addPreset: '+ Add preset',
+    deletePreset: (name) => `Delete ${name}`,
+    reset: 'Reset to defaults',
+    resetConfirm: 'Reset all settings to their defaults?',
+  },
+}
+
+export default en

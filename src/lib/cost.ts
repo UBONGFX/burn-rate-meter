@@ -1,3 +1,5 @@
+import type { Locale } from '../i18n/locale'
+
 // All money math lives here as pure functions so it can be unit-tested
 // without React or timers.
 
@@ -33,15 +35,17 @@ export function changeHeadcount(segment: RateSegment, elapsedMs: number, people:
   return { ...segment, startMs: elapsedMs, baseCost: costAt(elapsedMs, segment), people }
 }
 
-const eurFormat = new Intl.NumberFormat('de-DE', { style: 'currency', currency: 'EUR' })
-const eurFormatRounded = new Intl.NumberFormat('de-DE', {
-  style: 'currency',
-  currency: 'EUR',
-  maximumFractionDigits: 0,
-})
+const INTL_LOCALES: Record<Locale, string> = {
+  de: 'de-DE', // 1.234,50 €
+  en: 'en-IE', // €1,234.50 – English formatting for euros
+}
 
-export function formatEUR(amount: number, { rounded = false } = {}): string {
-  return (rounded ? eurFormatRounded : eurFormat).format(amount)
+export function formatEUR(amount: number, { locale, rounded = false }: { locale: Locale; rounded?: boolean }): string {
+  return new Intl.NumberFormat(INTL_LOCALES[locale], {
+    style: 'currency',
+    currency: 'EUR',
+    ...(rounded && { maximumFractionDigits: 0 }),
+  }).format(amount)
 }
 
 export function formatDuration(elapsedMs: number): string {
@@ -53,25 +57,35 @@ export function formatDuration(elapsedMs: number): string {
   return hours > 0 ? `${hours}:${mmss}` : mmss
 }
 
-type Comparison = { emoji: string; singular: string; plural: string; price: number }
+export type ComparisonKey =
+  | 'usedCar'
+  | 'holiday'
+  | 'laptop'
+  | 'bike'
+  | 'headphones'
+  | 'pizza'
+  | 'doner'
+  | 'coffee'
+
+type Comparison = { key: ComparisonKey; emoji: string; price: number }
 
 // Sorted from most to least expensive; the first one we can afford at least once wins.
+// The names live in the i18n dictionaries under `comparisons`.
 const COMPARISONS: Comparison[] = [
-  { emoji: '🚗', singular: 'Gebrauchtwagen', plural: 'Gebrauchtwagen', price: 8000 },
-  { emoji: '🏝️', singular: 'Pauschalurlaub', plural: 'Pauschalurlaube', price: 1500 },
-  { emoji: '💻', singular: 'Laptop', plural: 'Laptops', price: 1200 },
-  { emoji: '🚲', singular: 'Fahrrad', plural: 'Fahrräder', price: 600 },
-  { emoji: '🎧', singular: 'Kopfhörer', plural: 'Kopfhörer', price: 250 },
-  { emoji: '🍕', singular: 'Pizza', plural: 'Pizzen', price: 11 },
-  { emoji: '🥙', singular: 'Döner', plural: 'Döner', price: 7.5 },
-  { emoji: '☕', singular: 'Kaffee', plural: 'Kaffees', price: 3.5 },
+  { key: 'usedCar', emoji: '🚗', price: 8000 },
+  { key: 'holiday', emoji: '🏝️', price: 1500 },
+  { key: 'laptop', emoji: '💻', price: 1200 },
+  { key: 'bike', emoji: '🚲', price: 600 },
+  { key: 'headphones', emoji: '🎧', price: 250 },
+  { key: 'pizza', emoji: '🍕', price: 11 },
+  { key: 'doner', emoji: '🥙', price: 7.5 },
+  { key: 'coffee', emoji: '☕', price: 3.5 },
 ]
 
-export type ComparisonResult = { emoji: string; count: number; label: string }
+export type ComparisonResult = { key: ComparisonKey; emoji: string; count: number }
 
 export function compareCost(amount: number): ComparisonResult | null {
   const match = COMPARISONS.find((c) => amount >= c.price)
   if (!match) return null
-  const count = Math.floor(amount / match.price)
-  return { emoji: match.emoji, count, label: count === 1 ? match.singular : match.plural }
+  return { key: match.key, emoji: match.emoji, count: Math.floor(amount / match.price) }
 }

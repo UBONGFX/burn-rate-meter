@@ -1,3 +1,5 @@
+import { LANGUAGES, type Language } from '../i18n/locale'
+
 export type Preset = {
   id: string
   name: string
@@ -10,6 +12,7 @@ export type Theme = (typeof THEMES)[number]
 
 export type Settings = {
   theme: Theme
+  language: Language
   defaultPeople: number
   defaultHourlyRate: number
   /** Every time this many euros are burned, a bill falls from the sky. */
@@ -29,6 +32,7 @@ export const LIMITS = {
 
 export const DEFAULT_SETTINGS: Settings = {
   theme: 'system',
+  language: 'auto',
   defaultPeople: 6,
   defaultHourlyRate: 80,
   billValue: 10,
@@ -72,6 +76,7 @@ export function sanitizeSettings(value: unknown): Settings {
   const s = value as Record<string, unknown>
   return {
     theme: THEMES.includes(s.theme as Theme) ? (s.theme as Theme) : DEFAULT_SETTINGS.theme,
+    language: LANGUAGES.includes(s.language as Language) ? (s.language as Language) : DEFAULT_SETTINGS.language,
     defaultPeople: clampNumber(s.defaultPeople, LIMITS.people, DEFAULT_SETTINGS.defaultPeople),
     defaultHourlyRate: clampNumber(s.defaultHourlyRate, LIMITS.hourlyRate, DEFAULT_SETTINGS.defaultHourlyRate),
     billValue: clampNumber(s.billValue, LIMITS.billValue, DEFAULT_SETTINGS.billValue),
