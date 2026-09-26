@@ -5,6 +5,7 @@ import { useI18n } from '../i18n/useI18n'
 import { costPerMinute, headcount, hourlyTotal } from '../lib/cost'
 import { LIMITS, THEMES, type Attendance, type Preset, type Role, type Settings as SettingsType } from '../lib/settings'
 import { AttendeeRows } from './AttendeeList'
+import { ConfirmDialog } from './ConfirmDialog'
 import { Segmented } from './Segmented'
 import { Stepper } from './Stepper'
 
@@ -37,6 +38,7 @@ export function Settings({ settings, onChange, onReset }: SettingsProps) {
   const { roles } = settings
   // Presets are collapsed to one line each; only the one being edited is open.
   const [openPresetId, setOpenPresetId] = useState<string | null>(null)
+  const [confirmingReset, setConfirmingReset] = useState(false)
   const update = (patch: Partial<SettingsType>) => onChange({ ...settings, ...patch })
 
   const updateRole = (id: string, patch: Partial<Role>) =>
@@ -230,12 +232,24 @@ export function Settings({ settings, onChange, onReset }: SettingsProps) {
       <button
         type="button"
         className="text-button text-button-danger settings-reset"
-        onClick={() => {
-          if (confirm(t.settings.resetConfirm)) onReset()
-        }}
+        onClick={() => setConfirmingReset(true)}
       >
         {t.settings.reset}
       </button>
+
+      <ConfirmDialog
+        open={confirmingReset}
+        title={t.settings.resetTitle}
+        message={t.settings.resetMessage}
+        confirmLabel={t.settings.resetConfirm}
+        cancelLabel={t.settings.cancel}
+        onConfirm={() => {
+          setConfirmingReset(false)
+          setOpenPresetId(null)
+          onReset()
+        }}
+        onCancel={() => setConfirmingReset(false)}
+      />
     </div>
   )
 }

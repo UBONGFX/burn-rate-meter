@@ -160,8 +160,10 @@ test('reset restores all defaults after confirming', async ({ page }) => {
   await page.getByRole('button', { name: 'Rolle Management löschen' }).click()
   await defaultsSection(page).getByLabel('Developer · 50 €/h', { exact: true }).fill('20')
 
-  page.once('dialog', (dialog) => dialog.accept())
   await page.getByRole('button', { name: 'Auf Standard zurücksetzen' }).click()
+  const dialog = page.getByRole('dialog', { name: 'Alles zurücksetzen?' })
+  await dialog.getByRole('button', { name: 'Zurücksetzen' }).click()
+  await expect(dialog).toBeHidden()
 
   await expect(defaultsSection(page).getByLabel('Developer · 50 €/h', { exact: true })).toHaveValue('6')
   await expect(roleRows(page)).toHaveCount(6)
@@ -172,8 +174,21 @@ test('reset does nothing when cancelled', async ({ page }) => {
   await openSettings(page)
   await defaultsSection(page).getByLabel('Developer · 50 €/h', { exact: true }).fill('20')
 
-  page.once('dialog', (dialog) => dialog.dismiss())
+  const dialog = page.getByRole('dialog', { name: 'Alles zurücksetzen?' })
+  // Cancel button, Escape and a click on the backdrop all keep the settings
   await page.getByRole('button', { name: 'Auf Standard zurücksetzen' }).click()
+  await expect(dialog.getByRole('button', { name: 'Abbrechen' })).toBeFocused()
+  await dialog.getByRole('button', { name: 'Abbrechen' }).click()
+  await expect(dialog).toBeHidden()
+
+  await page.getByRole('button', { name: 'Auf Standard zurücksetzen' }).click()
+  await page.keyboard.press('Escape')
+  await expect(dialog).toBeHidden()
+
+  await page.getByRole('button', { name: 'Auf Standard zurücksetzen' }).click()
+  await page.mouse.click(5, 5)
+  await expect(dialog).toBeHidden()
+
   await expect(defaultsSection(page).getByLabel('Developer · 50 €/h', { exact: true })).toHaveValue('20')
 })
 

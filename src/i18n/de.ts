@@ -85,7 +85,10 @@ const de = {
     edit: 'Bearbeiten',
     presetMeta: (people: string, perMinute: string) => `${people} · ${perMinute}/min`,
     reset: 'Auf Standard zurücksetzen',
-    resetConfirm: 'Alle Einstellungen auf Standard zurücksetzen?',
+    resetTitle: 'Alles zurücksetzen?',
+    resetMessage: 'Rollen, Vorlagen, Standard-Besetzung, Farbschema und Sprache bekommen wieder ihre Standardwerte.',
+    resetConfirm: 'Zurücksetzen',
+    cancel: 'Abbrechen',
   },
 }
 

@@ -82,7 +82,10 @@ const en: Messages = {
     edit: 'Edit',
     presetMeta: (people, perMinute) => `${people} · ${perMinute}/min`,
     reset: 'Reset to defaults',
-    resetConfirm: 'Reset all settings to their defaults?',
+    resetTitle: 'Reset everything?',
+    resetMessage: 'Roles, presets, default attendance, color scheme and language go back to their defaults.',
+    resetConfirm: 'Reset',
+    cancel: 'Cancel',
   },
 }
 
