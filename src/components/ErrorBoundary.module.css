@@ -1,0 +1,45 @@
+.page {
+  display: grid;
+  place-items: center;
+  min-height: 100vh;
+  min-height: 100dvh;
+  padding: var(--space-16);
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-8);
+  width: 100%;
+  max-width: 420px;
+  padding: var(--space-24);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-xl);
+  background: var(--surface);
+  text-align: center;
+}
+
+.emoji {
+  margin: 0;
+  font-size: 3rem;
+}
+
+.title {
+  margin: 0;
+  font-size: var(--text-xl);
+  color: var(--text);
+}
+
+.message {
+  margin: 0 0 var(--space-8);
+  color: var(--text-muted);
+  line-height: 1.45;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--space-8);
+}

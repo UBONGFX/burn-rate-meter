@@ -4,6 +4,12 @@ import type { Language } from './locale'
 
 // The German dictionary is the source of truth: `en.ts` must match its shape.
 const de = {
+  error: {
+    title: 'Da ist etwas angebrannt',
+    message: 'Die App ist auf einen Fehler gestoßen. Meist hilft Neuladen – sonst die Einstellungen zurücksetzen.',
+    reload: 'Neu laden',
+    reset: 'Einstellungen zurücksetzen',
+  },
   nav: {
     settings: 'Einstellungen',
     back: '← Zurück',
