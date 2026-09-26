@@ -2,6 +2,10 @@
 
 All notable changes to this project are documented here. The project follows [Semantic Versioning](https://semver.org).
 
+## 1.3.3 – 2026-09-26
+
+- The quick start price is as large as the meeting counter
+
 ## 1.3.2 – 2026-09-26
 
 - Faster, calmer app launch: a glowing flame on the right background instead of a black or white screen, and the cached app after 3 seconds on a slow network

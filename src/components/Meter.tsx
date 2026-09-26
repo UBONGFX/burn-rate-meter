@@ -13,6 +13,7 @@ import {
   startSegment,
 } from '../lib/cost'
 import type { Attendance } from '../lib/settings'
+import { amountFontSize } from '../lib/amountFontSize'
 import { cx } from '../lib/cx'
 import { AttendeeList } from './AttendeeList'
 import { Button } from './Button'
@@ -20,14 +21,6 @@ import { MoneyRain } from './MoneyRain'
 import styles from './Meter.module.css'
 import { Summary } from './Summary'
 import type { MeetingConfig } from './QuickStart'
-
-/**
- * As large as possible, but shrinking with the number of characters so long
- * amounts like "12.345,67 €" still fit the page width (max 760px minus gutters).
- */
-function counterFontSize(text: string): string {
-  return `min(8.5rem, calc(${(1.55 / text.length).toFixed(4)} * min(100vw - 32px, 728px)))`
-}
 
 type MeterProps = {
   config: MeetingConfig
@@ -79,7 +72,7 @@ export function Meter({ config, billValue, onRestart, onNew }: MeterProps) {
           initial={reduceMotion || billCount === 0 ? false : { scale: 1.06 }}
           animate={{ scale: 1 }}
           transition={{ type: 'spring', stiffness: 400, damping: 15 }}
-          style={{ fontSize: counterFontSize(formatEUR(cost)) }}
+          style={{ fontSize: amountFontSize(formatEUR(cost)) }}
           aria-live="off"
         >
           {formatEUR(cost)}

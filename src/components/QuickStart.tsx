@@ -3,6 +3,7 @@ import { motion } from 'motion/react'
 import { useI18n } from '../i18n/useI18n'
 import { costPerMinute, headcount, hourlyTotal } from '../lib/cost'
 import { countOf, type Attendance, type Role, type Settings } from '../lib/settings'
+import { amountFontSize } from '../lib/amountFontSize'
 import { cx } from '../lib/cx'
 import { AttendeeList } from './AttendeeList'
 import { buttonClass } from './buttonClass'
@@ -38,7 +39,13 @@ export function QuickStart({ settings, onStart }: QuickStartProps) {
       {/* The price is the hero, echoing the meter the meeting will run on. */}
       <div className={styles.hero} aria-live="polite">
         <h2 className={styles.kicker}>{t.quickStart.title}</h2>
-        <p className={styles.price} data-testid="price-per-minute">{formatEUR(costPerMinute(total))}</p>
+        <p
+          className={styles.price}
+          style={{ fontSize: amountFontSize(formatEUR(costPerMinute(total))) }}
+          data-testid="price-per-minute"
+        >
+          {formatEUR(costPerMinute(total))}
+        </p>
         <p className={styles.unit}>{t.quickStart.perMinute}</p>
         <p className={styles.sub}>{t.quickStart.perHour(formatEUR(total, { rounded: true }))}</p>
       </div>
