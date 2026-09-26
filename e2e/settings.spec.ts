@@ -199,7 +199,7 @@ test('the bill value sets how often bills fall', async ({ page }) => {
     delete (Element.prototype as Partial<Element>).animate
   })
   await page.goto('/')
-  await page.clock.pauseAt(new Date('2026-01-01T09:00:01'))
+  await page.clock.pauseAt(new Date('2026-01-01T09:01:00'))
 
   // The clock is paused, so every view switch needs runFor() to animate.
   await page.getByRole('button', { name: /Einstellungen/ }).click()

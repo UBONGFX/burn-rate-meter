@@ -5,7 +5,8 @@ import { expect, test, type Page } from '@playwright/test'
 
 async function expectNoViolations(page: Page) {
   // Scan the settled screen: mid-fade elements would report false contrast issues.
-  await page.waitForTimeout(700)
+  await page.waitForFunction(() => document.getAnimations().length === 0)
+  await page.waitForTimeout(300)
   const results = await new AxeBuilder({ page }).withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa']).analyze()
   const summary = results.violations.map((v) => ({
     rule: v.id,
