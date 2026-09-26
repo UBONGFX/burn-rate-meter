@@ -9,6 +9,12 @@
   --text-muted: #b09a90;
   --accent: #ff7a1a;
   --accent-2: #ff3d2e;
+  /* Accent for small text: at least 4.5:1 on every surface (WCAG AA) */
+  --accent-text: #ff7a1a;
+  /* Fills behind white text (buttons, active pill): at least 4.5:1 with white */
+  --cta-from: #c2410c;
+  --cta-to: #c0262d;
+  --danger-solid: #c4302b;
   --counter-top: #ffd27a;
   --danger: #e5484d;
   --danger-text: #ffb4b0;
@@ -36,6 +42,7 @@
     --text-muted: #7c655b;
     --accent: #e85d04;
     --accent-2: #d62a1c;
+    --accent-text: #b34700;
     --counter-top: #ff9f2e;
     --danger: #d1343a;
     --danger-text: #b4232a;
@@ -55,6 +62,7 @@
   --text-muted: #7c655b;
   --accent: #e85d04;
   --accent-2: #d62a1c;
+  --accent-text: #b34700;
   --counter-top: #ff9f2e;
   --danger: #d1343a;
   --danger-text: #b4232a;
@@ -182,14 +190,14 @@ main {
 
 .btn-primary {
   border: none;
-  background: linear-gradient(135deg, var(--accent), var(--accent-2));
+  background: linear-gradient(135deg, var(--cta-from), var(--cta-to));
   color: #fff;
   box-shadow: 0 6px 24px rgb(var(--glow) / calc(0.35 * var(--glow-strength)));
 }
 
 .btn-danger-solid {
   border: none;
-  background: var(--danger);
+  background: var(--danger-solid);
   color: #fff;
 }
 
@@ -370,7 +378,7 @@ main {
 
 .preset-pill-active {
   border-color: transparent;
-  background: linear-gradient(135deg, var(--accent), var(--accent-2));
+  background: linear-gradient(135deg, var(--cta-from), var(--cta-to));
   color: #fff;
   box-shadow: 0 4px 16px rgb(var(--glow) / calc(0.3 * var(--glow-strength)));
 }
@@ -420,14 +428,12 @@ main {
   color: var(--text-muted);
 }
 
-/* Roles nobody brings are dimmed so the actual attendees stand out. */
-.attendee-absent {
-  opacity: 0.55;
-}
-
-.attendee-absent:focus-within,
-.attendee-absent:hover {
-  opacity: 1;
+/* Roles nobody brings are toned down (muted text, not transparency, to keep
+   the contrast readable) so the actual attendees stand out. */
+.attendee-absent .attendee-name,
+.attendee-absent .stepper-input input {
+  font-weight: 500;
+  color: var(--text-muted);
 }
 
 /* Meter */
@@ -773,7 +779,7 @@ main {
 }
 
 .settings-add {
-  color: var(--accent);
+  color: var(--accent-text);
 }
 
 .settings-add:hover,
@@ -903,14 +909,14 @@ main {
   margin-right: 0.2rem;
   font-weight: 800;
   font-variant-numeric: tabular-nums;
-  color: var(--accent);
+  color: var(--accent-text);
 }
 
 .attendees-action {
   flex-shrink: 0;
   font-size: 0.9rem;
   font-weight: 600;
-  color: var(--accent);
+  color: var(--accent-text);
 }
 
 .chevron {
