@@ -5,13 +5,17 @@ import { countOf, type Attendance, type Role } from '../lib/settings'
 import { cx } from '../lib/cx'
 import { AttendeeChip } from './AttendeeList'
 import { Button } from './Button'
+import { ShareButton } from './ShareButton'
 import styles from './Summary.module.css'
 
 // Up to this many, the comparison shows one emoji per item ("🍕🍕🍕").
 const MAX_EMOJIS = 12
 
 type SummaryProps = {
+  name: string | null
   cost: number
+  elapsedMs: number
+  people: number
   roles: Role[]
   attendance: Attendance
   onNew: () => void
@@ -19,7 +23,7 @@ type SummaryProps = {
 }
 
 /** End-of-meeting card: what the money could have bought, who was there, what next. */
-export function Summary({ cost, roles, attendance, onNew, onRestart }: SummaryProps) {
+export function Summary({ name, cost, elapsedMs, people, roles, attendance, onNew, onRestart }: SummaryProps) {
   const { t } = useI18n()
   const reduceMotion = useReducedMotion()
   const comparison = compareCost(cost)
@@ -65,6 +69,8 @@ export function Summary({ cost, roles, attendance, onNew, onRestart }: SummaryPr
           </div>
         )}
       </div>
+
+      <ShareButton result={{ name, cost, elapsedMs, people }} />
 
       <div className={styles.actions}>
         <Button size="medium" onClick={onNew}>

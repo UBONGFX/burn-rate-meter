@@ -48,6 +48,17 @@ const de = {
     newMeeting: 'Neues Meeting',
     sameAgain: 'Nochmal gleich',
   },
+  share: {
+    button: '📤 Ergebnis teilen',
+    // Kicker on the image, e.g. "Teammeeting hat gekostet"
+    costHeadline: (name: string | null) => `${name ?? 'Dieses Meeting'} hat gekostet`,
+    costLine: (name: string | null, amount: string) => `🔥 ${name ?? 'Dieses Meeting'} hat ${amount} gekostet.`,
+    footer: (url: string) => `Gemessen mit Burn Rate Meter: ${url}`,
+    savedAndCopied: 'Bild gespeichert und Text kopiert – einfach einfügen.',
+    copied: 'Text kopiert – einfach einfügen.',
+    saved: 'Bild gespeichert.',
+    failed: 'Teilen hat leider nicht geklappt.',
+  },
   comparisons: {
     usedCar: ['Gebrauchtwagen', 'Gebrauchtwagen'],
     holiday: ['Pauschalurlaub', 'Pauschalurlaube'],

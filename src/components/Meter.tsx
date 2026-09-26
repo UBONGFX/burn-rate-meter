@@ -108,7 +108,10 @@ export function Meter({ config, billValue, onRestart, onNew }: MeterProps) {
             exit={{ opacity: 0, y: -20 }}
           >
             <Summary
+              name={config.name}
               cost={cost}
+              elapsedMs={elapsedMs}
+              people={people}
               roles={config.roles}
               attendance={attendance}
               onNew={onNew}

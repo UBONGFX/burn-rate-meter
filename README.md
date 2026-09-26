@@ -16,6 +16,7 @@ How much money is this meeting burning right now? Pick who is in the room, start
 - **Roles with realistic rates:** Developer, Product Owner, Scrum Master, Architect, Team Lead and Management, based on average German salaries (gross × 1.23 employer costs ÷ 1,650 productive hours)
 - **Live counter:** a ticking € counter with falling bills, pause/resume, and people joining or leaving mid-meeting – only the time from then on uses the new rate
 - **Result:** what the meeting cost in pizzas, laptops or holidays, and who was there
+- **Share:** the result as an image and text – through the share sheet on phones, or saved and copied on desktop
 - **Settings:** your own roles, rates, default attendance, presets and bill value, saved in your browser
 - **German & English, light & dark:** detected from your system, or set in the settings
 - **Works on phones** and respects reduced motion
