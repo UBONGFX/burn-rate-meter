@@ -42,7 +42,7 @@ export const LIMITS = {
 export const DEFAULT_SETTINGS: Settings = {
   theme: 'system',
   language: 'auto',
-  billValue: 10,
+  billValue: 5,
   // Rates are employer cost per hour, based on average German gross salaries (2026):
   // gross × 1.23 (employer social security) ÷ 1,650 productive hours, rounded to 5 €.
   roles: [

@@ -1,15 +1,12 @@
 import { motion, useReducedMotion } from 'motion/react'
 import { useI18n } from '../i18n/useI18n'
-import { compareCost } from '../lib/cost'
+import { MAX_COMPARISON_COUNT, compareCost } from '../lib/cost'
 import { countOf, type Attendance, type Role } from '../lib/settings'
 import { cx } from '../lib/cx'
 import { AttendeeChip } from './AttendeeList'
 import { Button } from './Button'
 import { ShareButton } from './ShareButton'
 import styles from './Summary.module.css'
-
-// Up to this many, the comparison shows one emoji per item ("🍕🍕🍕").
-const MAX_EMOJIS = 12
 
 type SummaryProps = {
   name: string | null
@@ -24,12 +21,12 @@ type SummaryProps = {
 
 /** End-of-meeting card: what the money could have bought, who was there, what next. */
 export function Summary({ name, cost, elapsedMs, people, roles, attendance, onNew, onRestart }: SummaryProps) {
-  const { t } = useI18n()
+  const { t, formatEUR } = useI18n()
   const reduceMotion = useReducedMotion()
   const comparison = compareCost(cost)
   const present = roles.filter((role) => countOf(attendance, role.id) > 0)
   const emoji = comparison?.emoji ?? '☕'
-  const emojiCount = comparison && comparison.count <= MAX_EMOJIS ? comparison.count : 1
+  const emojiCount = comparison && comparison.count <= MAX_COMPARISON_COUNT ? comparison.count : 1
 
   return (
     <div className={styles.summary} data-testid="summary">
@@ -52,6 +49,9 @@ export function Summary({ name, cost, elapsedMs, people, roles, attendance, onNe
             <p className={styles.kicker}>{t.meter.comparisonPrefix}</p>
             <p className={styles.headline}>
               {comparison.count} {t.comparisons[comparison.key][comparison.count === 1 ? 0 : 1]}
+            </p>
+            <p className={styles.priceNote}>
+              {t.meter.pricePer(formatEUR(comparison.price, { rounded: Number.isInteger(comparison.price) }))}
             </p>
           </>
         ) : (

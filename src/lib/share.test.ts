@@ -26,7 +26,7 @@ describe('shareText', () => {
     expect(text.split('\n').slice(0, 3)).toEqual([
       '🔥 This meeting cost €1,300.00.',
       '⏱ 1:02:05 · 👥 1 person',
-      '💻 That\'s 1 laptop!',
+      '👟 That\'s 10 pairs of sneakers!',
     ])
   })
 

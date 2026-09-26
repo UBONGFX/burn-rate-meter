@@ -1,10 +1,9 @@
 import type { Messages } from '../i18n/de'
-import { compareCost, formatDuration } from './cost'
+import { MAX_COMPARISON_COUNT, compareCost, formatDuration } from './cost'
 import { comparisonLabel, type MeetingResult } from './share'
 
 // Square, so it looks good in chats and on social media
 const SIZE = 1080
-const MAX_EMOJIS = 12
 const EMOJIS_PER_ROW = 6
 
 /** The design tokens of the current color scheme, read from the page. */
@@ -104,7 +103,7 @@ export function renderShareImage(t: Messages, formatEUR: (amount: number) => str
 
   // What the money could have bought
   const comparison = comparisonLabel(t, result.cost)
-  const emojiCount = comparison.count <= MAX_EMOJIS ? comparison.count : 1
+  const emojiCount = comparison.count <= MAX_COMPARISON_COUNT ? comparison.count : 1
   let y: number
   if (emojiCount === 1) {
     ctx.font = `130px ${family}`
