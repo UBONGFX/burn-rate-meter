@@ -31,3 +31,7 @@ npm run screenshots  # regenerate the screenshots above
 ```
 
 Built with Vite, React, TypeScript and [Motion](https://motion.dev).
+
+## License
+
+[MIT](LICENSE)
