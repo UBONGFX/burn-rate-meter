@@ -223,6 +223,21 @@ test('the bill value sets how often bills fall', async ({ page }) => {
   await expect(page.locator('.bill')).toHaveCount(0)
 })
 
+test('settings changed in one tab reach other open tabs', async ({ page, context }) => {
+  const otherTab = await context.newPage()
+  await otherTab.goto('/')
+  await expect(otherTab.getByRole('button', { name: 'Meeting starten' })).toBeVisible()
+
+  await openSettings(page)
+  await page.getByRole('radio', { name: 'English' }).click()
+  // No reload needed in the other tab
+  await expect(otherTab.getByRole('button', { name: 'Start meeting' })).toBeVisible()
+
+  // …and the other tab doesn't write its old state back
+  await page.reload()
+  await expect(page.getByRole('button', { name: 'Start meeting' })).toBeVisible()
+})
+
 test.describe('on a phone', () => {
   // Only the phone's screen settings: the device's default browser (WebKit) can't be switched per group.
   const { viewport, deviceScaleFactor, isMobile, hasTouch } = devices['iPhone 13']
