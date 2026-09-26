@@ -32,6 +32,7 @@ A single-page React 19 + TypeScript app (Vite), with no router and no backend. `
 - Unit tests (Vitest) cover the pure logic in `src/lib` and `src/i18n`. `src/hooks/useMeetingTimer.test.ts` runs in jsdom (per-file `@vitest-environment` comment) with faked `performance` + `requestAnimationFrame`, under React strict mode.
 - `e2e/meeting.spec.ts` drives a full meeting under Playwright's fake clock, **paused** via `clock.pauseAt` so time only moves with `clock.runFor()`. It deletes `Element.prototype.animate` in an init script: Motion otherwise animates opacity through the Web Animations API, whose `document.timeline` the fake clock doesn't advance, so exit animations (and `AnimatePresence mode="wait"` view switches) would never finish. After Pause/Beenden, advance the clock a little before reading the counter — the timer swaps the last frame's value for the exact time.
 - `e2e/a11y.spec.ts` scans every screen with axe (WCAG 2.1 AA) in light and dark mode and drives a meeting by keyboard. axe skips gradients, so text on colored fills must use the `--cta-*` / `--danger-solid` tokens, and small accent text `--accent-text` (all checked to reach 4.5:1). Dim things with muted colors, never with `opacity`.
+- E2E tests find elements by role, label or `data-testid`, never by CSS class (class names are an implementation detail of the styles).
 - The e2e tests pin the browser locale to `de-DE` (the app auto-detects its language); override with `test.use({ locale })`.
 
 ## Conventions

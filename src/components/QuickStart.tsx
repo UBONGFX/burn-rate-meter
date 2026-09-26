@@ -35,7 +35,7 @@ export function QuickStart({ settings, onStart }: QuickStartProps) {
       {/* The price is the hero, echoing the meter the meeting will run on. */}
       <div className="qs-hero" aria-live="polite">
         <h2 className="qs-kicker">{t.quickStart.title}</h2>
-        <p className="qs-price">{formatEUR(costPerMinute(total))}</p>
+        <p className="qs-price" data-testid="price-per-minute">{formatEUR(costPerMinute(total))}</p>
         <p className="qs-unit">{t.quickStart.perMinute}</p>
         <p className="qs-sub">{t.quickStart.perHour(formatEUR(total, { rounded: true }))}</p>
       </div>

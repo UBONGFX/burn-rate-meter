@@ -46,7 +46,7 @@ export function AttendeeList({ roles, attendance, onChange, minimal = false }: A
         {!minimal && !open && present.length > 0 && (
           <span className="attendees-summary">
             {present.map((role) => (
-              <span key={role.id} className="attendee-chip">
+              <span key={role.id} className="attendee-chip" data-testid="attendee-chip">
                 <b>{countOf(attendance, role.id)}</b> {role.name}
               </span>
             ))}

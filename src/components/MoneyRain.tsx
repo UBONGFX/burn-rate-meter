@@ -49,6 +49,7 @@ export const MoneyRain = memo(function MoneyRain({ count, billValue }: MoneyRain
         <motion.div
           key={bill.id}
           className="bill"
+          data-testid="bill"
           style={{ left: `${bill.x}%` }}
           initial={{ y: '-15vh', rotate: bill.rotate, opacity: 0 }}
           animate={{ y: '110vh', rotate: bill.rotate + bill.spin, opacity: [0, 1, 1, 0.2] }}

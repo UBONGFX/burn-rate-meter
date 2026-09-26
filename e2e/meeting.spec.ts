@@ -2,7 +2,7 @@ import { expect, test, type Page } from '@playwright/test'
 
 /** Reads the big counter as a number, e.g. "1,23 €" → 1.23 (German locale). */
 async function readCounter(page: Page): Promise<number> {
-  const text = await page.locator('.counter').innerText()
+  const text = await page.getByTestId('meter-total').innerText()
   return Number(text.replace(/[^\d,]/g, '').replace(',', '.'))
 }
 
@@ -21,10 +21,10 @@ test('runs a meeting: counts, pauses, changes headcount and ends', async ({ page
 
   // Teammeeting preset: 6 × Developer (50) + 1 × Product Owner (55) + 1 × Scrum Master (50) = 405 €/h
   await page.getByRole('button', { name: /Teammeeting/ }).click()
-  await expect(page.locator('.qs-price')).toHaveText('6,75 €')
+  await expect(page.getByTestId('price-per-minute')).toHaveText('6,75 €')
   await page.getByRole('button', { name: 'Meeting starten' }).click()
   await page.clock.runFor(1000) // page transition
-  await expect(page.locator('.counter')).toBeVisible()
+  await expect(page.getByTestId('meter-total')).toBeVisible()
 
   // 6 seconds at 405 €/h = 0,675 €
   const start = await readCounter(page)
@@ -51,8 +51,8 @@ test('runs a meeting: counts, pauses, changes headcount and ends', async ({ page
 
   // Summary (under 3,50 € there is no comparison yet)
   await page.clock.runFor(1000)
-  await expect(page.locator('.stats > div').filter({ hasText: 'Personen' }).locator('dd')).toHaveText('9')
-  await expect(page.locator('.summary .attendee-chip')).toHaveText(['6 Developer', '2 Product Owner', '1 Scrum Master'])
+  await expect(page.getByTestId('meter-people')).toHaveText('9')
+  await expect(page.getByTestId('summary').getByTestId('attendee-chip')).toHaveText(['6 Developer', '2 Product Owner', '1 Scrum Master'])
   await expect(page.getByText('Nicht mal ein Kaffee')).toBeVisible()
 
   // "Nochmal gleich" starts over at zero
@@ -68,7 +68,7 @@ test.describe('language', () => {
   test('is detected from the browser and can be changed in the settings', async ({ page }) => {
     await page.goto('/')
     await expect(page.getByRole('button', { name: 'Start meeting' })).toBeVisible()
-    await expect(page.locator('.qs-price')).toHaveText('€5.00')
+    await expect(page.getByTestId('price-per-minute')).toHaveText('€5.00')
     await expect(page.getByText('per minute')).toBeVisible()
     await expect(page.getByText('€300 per hour')).toBeVisible()
     await expect(page.getByText('6 people')).toBeVisible()

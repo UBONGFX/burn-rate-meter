@@ -17,7 +17,7 @@ const rolesSection = (page: Page) => section(page, 'Rollen')
 const presetsSection = (page: Page) => section(page, 'Vorlagen')
 // List rows without the trailing "+ … hinzufügen" row
 const roleRows = (page: Page) => rolesSection(page).locator('li').filter({ has: page.getByLabel('Name der Rolle') })
-const presetRows = (page: Page) => presetsSection(page).locator('li').filter({ has: page.locator('.preset-row') })
+const presetRows = (page: Page) => presetsSection(page).locator('li').filter({ has: page.getByRole('button', { name: /Bearbeiten/ }) })
 const editPreset = (page: Page, name: string) =>
   presetsSection(page).getByRole('button', { name: new RegExp(`^${name}`) }).click()
 const openAttendees = (page: Page) => page.getByRole('button', { name: /anpassen/i }).click()
@@ -34,16 +34,16 @@ test('the default attendance is used in the quick start and survives a reload', 
   await backToStart(page)
 
   // 10 × 50 + 1 × 55 = 555 €/h = 9,25 €/min
-  await expect(page.locator('.attendee-chip')).toHaveText(['10 Developer', '1 Product Owner'])
+  await expect(page.getByTestId('attendee-chip')).toHaveText(['10 Developer', '1 Product Owner'])
   await openAttendees(page)
   await expect(page.getByLabel('Developer · 50 €/h', { exact: true })).toHaveValue('10')
   await expect(page.getByLabel('Product Owner · 55 €/h', { exact: true })).toHaveValue('1')
-  await expect(page.locator('.qs-price')).toHaveText('9,25 €')
+  await expect(page.getByTestId('price-per-minute')).toHaveText('9,25 €')
   await expect(page.getByText('555 € pro Stunde')).toBeVisible()
   await expect(page.getByText('11 Personen')).toBeVisible()
 
   await page.reload()
-  await expect(page.locator('.attendee-chip')).toHaveText(['10 Developer', '1 Product Owner'])
+  await expect(page.getByTestId('attendee-chip')).toHaveText(['10 Developer', '1 Product Owner'])
 })
 
 test('counts stop at zero and a meeting needs at least one person', async ({ page }) => {
@@ -74,7 +74,7 @@ test('a role can be added with its own rate and used in the quick start', async 
   // Default 6 × Developer (300 €/h) + 1 × UX Designer (60 €/h) = 360 €/h = 6 €/min
   await openAttendees(page)
   await page.getByLabel('UX Designer · 60 €/h', { exact: true }).fill('1')
-  await expect(page.locator('.qs-price')).toHaveText('6,00 €')
+  await expect(page.getByTestId('price-per-minute')).toHaveText('6,00 €')
   await expect(page.getByText('360 € pro Stunde')).toBeVisible()
   await expect(page.getByText('7 Personen')).toBeVisible()
 
@@ -90,7 +90,7 @@ test('changing a role rate changes every preset using it', async ({ page }) => {
 
   // Teammeeting: 6 × 140 (Developer) + 55 + 50 = 945 €/h = 15,75 €/min
   await page.getByRole('button', { name: /Teammeeting/ }).click()
-  await expect(page.locator('.qs-price')).toHaveText('15,75 €')
+  await expect(page.getByTestId('price-per-minute')).toHaveText('15,75 €')
 })
 
 test('deleting a role removes it from the quick start and presets', async ({ page }) => {
@@ -131,7 +131,7 @@ test('a preset can be added, edited and used', async ({ page }) => {
 
   // 5 × 50 + 1 × 50 = 300 €/h = 5 €/min
   await page.getByRole('button', { name: /Daily/ }).click()
-  await expect(page.locator('.qs-price')).toHaveText('5,00 €')
+  await expect(page.getByTestId('price-per-minute')).toHaveText('5,00 €')
   await expect(page.getByText('300 € pro Stunde')).toBeVisible()
   await expect(page.getByText('6 Personen')).toBeVisible()
 
@@ -212,15 +212,15 @@ test('the bill value sets how often bills fall', async ({ page }) => {
   await page.getByRole('button', { name: /Teammeeting/ }).click()
   await startButton(page).click()
   await page.clock.runFor(1000)
-  await expect(page.locator('.bill')).toHaveCount(0)
+  await expect(page.getByTestId('bill')).toHaveCount(0)
 
   await page.clock.runFor(9000)
-  await expect(page.locator('.bill')).toHaveCount(1)
-  await expect(page.locator('.bill').first()).toContainText('1 €')
+  await expect(page.getByTestId('bill')).toHaveCount(1)
+  await expect(page.getByTestId('bill').first()).toContainText('1 €')
 
   // The bill removes itself after falling (at most 5 s), before the next one is due
   await page.clock.runFor(6000)
-  await expect(page.locator('.bill')).toHaveCount(0)
+  await expect(page.getByTestId('bill')).toHaveCount(0)
 })
 
 test('settings changed in one tab reach other open tabs', async ({ page, context }) => {
@@ -248,8 +248,8 @@ test.describe('on a phone', () => {
       page.evaluate(() => ({
         overflowX: document.documentElement.scrollWidth - window.innerWidth,
         // Header items wrapping onto a second line make them taller than one button row
-        headerWraps: [...document.querySelectorAll<HTMLElement>('.app-header > *')].some((el) => el.offsetHeight > 48),
-        truncatedInputs: [...document.querySelectorAll<HTMLInputElement>('.stepper-input input')].filter(
+        headerWraps: [...document.querySelectorAll<HTMLElement>('header > *')].some((el) => el.offsetHeight > 48),
+        truncatedInputs: [...document.querySelectorAll<HTMLInputElement>('input[type=number]')].filter(
           (input) => input.scrollWidth > input.clientWidth,
         ).length,
       }))

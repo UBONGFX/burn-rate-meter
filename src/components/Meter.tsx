@@ -69,6 +69,7 @@ export function Meter({ config, billValue, onRestart, onNew }: MeterProps) {
         <motion.div
           key={billCount}
           className={`counter ${status === 'paused' ? 'counter-paused' : ''}`}
+          data-testid="meter-total"
           initial={reduceMotion || billCount === 0 ? false : { scale: 1.06 }}
           animate={{ scale: 1 }}
           transition={{ type: 'spring', stiffness: 400, damping: 15 }}
@@ -90,7 +91,7 @@ export function Meter({ config, billValue, onRestart, onNew }: MeterProps) {
         </div>
         <div>
           <dt>{t.meter.people}</dt>
-          <dd>{people}</dd>
+          <dd data-testid="meter-people">{people}</dd>
         </div>
       </dl>
 

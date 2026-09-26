@@ -46,7 +46,7 @@ test('meter', async ({ page }) => {
   await page.clock.fastForward('03:00')
   // Mid-fall: the burst from fast-forwarding plus the regular ones
   await page.clock.runFor(2300)
-  await expect(page.locator('.bill').first()).toBeVisible()
+  await expect(page.getByTestId('bill').first()).toBeVisible()
   await page.screenshot({ path: `${OUT}/meter.png` })
 })
 

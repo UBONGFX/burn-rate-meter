@@ -24,7 +24,7 @@ export function Summary({ cost, roles, attendance, onNew, onRestart }: SummaryPr
   const emojiCount = comparison && comparison.count <= MAX_EMOJIS ? comparison.count : 1
 
   return (
-    <div className="summary">
+    <div className="summary" data-testid="summary">
       <div className="summary-card">
         <div className={emojiCount === 1 ? 'summary-emojis summary-emojis-single' : 'summary-emojis'} aria-hidden="true">
           {Array.from({ length: emojiCount }, (_, i) => (
@@ -56,7 +56,7 @@ export function Summary({ cost, roles, attendance, onNew, onRestart }: SummaryPr
         {present.length > 0 && (
           <div className="summary-chips">
             {present.map((role) => (
-              <span key={role.id} className="attendee-chip">
+              <span key={role.id} className="attendee-chip" data-testid="attendee-chip">
                 <b>{countOf(attendance, role.id)}</b> {role.name}
               </span>
             ))}
