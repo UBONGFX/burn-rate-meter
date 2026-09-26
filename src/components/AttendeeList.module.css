@@ -1,7 +1,7 @@
 .attendees {
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
+  gap: var(--space-8);
   width: 100%;
 }
 
@@ -9,11 +9,11 @@
   display: grid;
   grid-template-columns: auto 1fr auto;
   align-items: center;
-  gap: 0.6rem 0.6rem;
+  gap: var(--space-10) var(--space-10);
   width: 100%;
-  padding: 0.85rem 1rem;
+  padding: var(--space-12) var(--space-16);
   border: 1px solid var(--border);
-  border-radius: 14px;
+  border-radius: var(--radius-lg);
   background: var(--surface);
   text-align: left;
   transition: border-color 0.15s;
@@ -24,7 +24,7 @@
 }
 
 .icon {
-  font-size: 1.1rem;
+  font-size: var(--text-lg);
 }
 
 .count {
@@ -35,7 +35,7 @@
   display: flex;
   grid-column: 1 / -1;
   flex-wrap: wrap;
-  gap: 0.35rem;
+  gap: var(--space-6);
   min-width: 0;
 }
 
@@ -52,7 +52,7 @@
   display: inline-flex;
   align-self: center;
   width: auto;
-  padding: 0.4rem 0.8rem;
+  padding: var(--space-6) var(--space-12);
   border-color: transparent;
   background: transparent;
 }
@@ -63,7 +63,7 @@
   margin: 0;
   padding: 0;
   border: 1px solid var(--border);
-  border-radius: 14px;
+  border-radius: var(--radius-lg);
   background: var(--surface);
 }
 
@@ -73,7 +73,7 @@
 }
 
 .list > li {
-  padding: 0.55rem 0.75rem 0.55rem 1rem;
+  padding: var(--space-8) var(--space-12) var(--space-8) var(--space-16);
   transition: opacity 0.15s;
 }
 
@@ -97,7 +97,7 @@
 }
 
 .rate {
-  font-size: 0.8rem;
+  font-size: var(--text-xs);
   color: var(--text-muted);
 }
 
@@ -111,15 +111,15 @@
 /* Chip: "6 Developer" */
 
 .chip {
-  padding: 0.2rem 0.6rem;
-  border-radius: 999px;
+  padding: var(--space-4) var(--space-10);
+  border-radius: var(--radius-full);
   background: var(--surface-2);
-  font-size: 0.85rem;
+  font-size: var(--text-sm);
   white-space: nowrap;
 }
 
 .chip b {
-  margin-right: 0.2rem;
+  margin-right: var(--space-4);
   font-weight: 800;
   font-variant-numeric: tabular-nums;
   color: var(--accent-text);
@@ -129,7 +129,7 @@
 
 .expand {
   flex-shrink: 0;
-  font-size: 0.9rem;
+  font-size: var(--text-sm);
   font-weight: 600;
   color: var(--accent-text);
 }
