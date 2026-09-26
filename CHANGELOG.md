@@ -2,6 +2,10 @@
 
 All notable changes to this project are documented here. The project follows [Semantic Versioning](https://semver.org).
 
+## 1.3.1 – 2026-09-26
+
+- Link previews: shared links show an image and description in Slack, Teams, WhatsApp and co.
+
 ## 1.3.0 – 2026-09-26
 
 - Installable as an app (home screen icon, full screen without browser bar)
