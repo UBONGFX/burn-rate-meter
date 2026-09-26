@@ -16,7 +16,9 @@ test('is installable: manifest with name and icons', async ({ page, request }) =
   }
 })
 
-test('works offline after the first visit', async ({ page, context }) => {
+test('works offline after the first visit', async ({ page, context, browserName }) => {
+  // Playwright's offline mode crashes WebKit when a service worker answers ("internal error")
+  test.skip(browserName === 'webkit', "Playwright can't emulate offline with service workers in WebKit")
   await page.goto(APP)
   // Wait until the service worker controls the page and has cached everything
   await page.evaluate(async () => {
