@@ -24,7 +24,7 @@ How much money is this meeting burning right now? Pick who is in the room, start
 npm install
 npm run dev          # dev server
 npm test             # unit tests (Vitest)
-npm run test:e2e     # end-to-end tests (Playwright; first run: npx playwright install --only-shell chromium)
+npm run test:e2e     # end-to-end tests in Chromium and Firefox (first run: npx playwright install --only-shell chromium firefox)
 npm run lint         # oxlint
 npm run build        # type-check + production build
 npm run screenshots  # regenerate the screenshots above
