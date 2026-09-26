@@ -15,7 +15,7 @@ npx vitest run -t "headcount"        # tests matching a name
 npm run lint                         # oxlint (.oxlintrc.json) + stylelint (.stylelintrc.json) for src/**/*.css
 npm run build                        # tsc -b + vite build
 npm run screenshots                  # regenerate docs/screenshots (e2e/screenshots.spec.ts, skipped otherwise)
-npm run brand-assets                 # regenerate public/icons (e2e/brand-assets.spec.ts)
+npm run brand-assets                 # regenerate public/icons and public/og-image.png (e2e/brand-assets.spec.ts)
 ```
 
 ## Workflow

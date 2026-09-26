@@ -33,3 +33,16 @@ test('works offline after the first visit', async ({ page, context }) => {
   await expect(page.getByRole('button', { name: /Pause/ })).toBeVisible()
   await context.setOffline(false)
 })
+
+test('has a link preview image for chats and social media', async ({ page, request }) => {
+  await page.goto(APP)
+  const meta = (property: string) => page.locator(`meta[property="${property}"]`).getAttribute('content')
+  expect(await meta('og:image')).toBe('https://ubongfx.github.io/burn-rate-meter/og-image.png')
+  expect([await meta('og:image:width'), await meta('og:image:height')]).toEqual(['1200', '630'])
+
+  // The image the tag points to is part of the build (checked locally, not on the live site)
+  const image = await request.get(`${APP}og-image.png`)
+  expect(image.headers()['content-type']).toBe('image/png')
+  const png = await image.body()
+  expect([png.readUInt32BE(16), png.readUInt32BE(20)]).toEqual([1200, 630])
+})

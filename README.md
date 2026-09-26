@@ -31,7 +31,7 @@ npm run test:e2e     # end-to-end tests in Chromium and Firefox (first run: npx 
 npm run lint         # oxlint
 npm run build        # type-check + production build
 npm run screenshots  # regenerate the screenshots above
-npm run brand-assets # regenerate the app icons in public/icons
+npm run brand-assets # regenerate the app icons and the link preview image
 ```
 
 Built with Vite, React, TypeScript and [Motion](https://motion.dev).
