@@ -1,5 +1,6 @@
 import { useEffect, useId, useRef } from 'react'
 import { Button } from './Button'
+import styles from './ConfirmDialog.module.css'
 
 type ConfirmDialogProps = {
   open: boolean
@@ -30,7 +31,7 @@ export function ConfirmDialog({ open, title, message, confirmLabel, cancelLabel,
   return (
     <dialog
       ref={ref}
-      className="dialog"
+      className={styles.dialog}
       aria-labelledby={titleId}
       aria-describedby={messageId}
       onCancel={(e) => {
@@ -43,14 +44,14 @@ export function ConfirmDialog({ open, title, message, confirmLabel, cancelLabel,
         if (e.target === e.currentTarget) onCancel()
       }}
     >
-      <div className="dialog-body">
-        <h2 id={titleId} className="dialog-title">
+      <div className={styles.body}>
+        <h2 id={titleId} className={styles.title}>
           {title}
         </h2>
-        <p id={messageId} className="dialog-message">
+        <p id={messageId} className={styles.message}>
           {message}
         </p>
-        <div className="dialog-actions">
+        <div className={styles.actions}>
           <Button autoFocus onClick={onCancel}>
             {cancelLabel}
           </Button>

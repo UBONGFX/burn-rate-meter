@@ -51,78 +51,6 @@ main {
   justify-content: center;
 }
 
-/* Stepper */
-
-.stepper {
-  display: flex;
-  flex-direction: column;
-  gap: 0.4rem;
-  min-width: 0;
-}
-
-.stepper label {
-  font-size: 0.85rem;
-  color: var(--text-muted);
-}
-
-.stepper-controls {
-  display: flex;
-  align-items: stretch;
-  gap: 0.4rem;
-}
-
-.stepper-controls > button {
-  width: 2.6rem;
-  flex-shrink: 0;
-  border-radius: 10px;
-  border: 1px solid var(--border);
-  background: var(--surface-2);
-  font-size: 1.3rem;
-  line-height: 1;
-}
-
-.stepper-input {
-  position: relative;
-  flex: 1;
-  min-width: 0;
-}
-
-.stepper-input input {
-  width: 100%;
-  height: 100%;
-  min-height: 2.6rem;
-  border-radius: 10px;
-  border: 1px solid var(--border);
-  background: var(--bg);
-  text-align: center;
-  font-size: 1.15rem;
-  font-weight: 700;
-  font-variant-numeric: tabular-nums;
-  appearance: textfield;
-  -moz-appearance: textfield;
-}
-
-.stepper-input:has(.stepper-suffix) input {
-  padding-right: 2.6rem;
-}
-
-.stepper-input input::-webkit-outer-spin-button,
-.stepper-input input::-webkit-inner-spin-button {
-  -webkit-appearance: none;
-  margin: 0;
-}
-
-.stepper-suffix {
-  position: absolute;
-  right: 0.6rem;
-  top: 50%;
-  transform: translateY(-50%);
-  font-size: 0.8rem;
-  color: var(--text-muted);
-  pointer-events: none;
-}
-
-
 /* Quick start */
 
 .quick-start {
@@ -240,7 +168,7 @@ main {
   border-top: 1px solid var(--border);
 }
 
-.attendee-list .stepper-compact label {
+.attendee-row-label {
   display: flex;
   flex-direction: column;
   min-width: 0;
@@ -262,8 +190,7 @@ main {
 
 /* Roles nobody brings are toned down (muted text, not transparency, to keep
    the contrast readable) so the actual attendees stand out. */
-.attendee-absent .attendee-name,
-.attendee-absent .stepper-input input {
+.attendee-absent .attendee-name {
   font-weight: 500;
   color: var(--text-muted);
 }
@@ -439,48 +366,16 @@ main {
 }
 
 
-/* Money rain */
 
-.money-rain {
-  position: fixed;
-  inset: 0;
-  overflow: hidden;
-  pointer-events: none;
-  z-index: 0;
-}
 
-.meter > :not(.money-rain) {
+/* Content above the money rain */
+.meter > :not([data-rain]) {
   position: relative;
   z-index: 1;
 }
 
-.bill {
-  position: absolute;
-  top: 0;
-  width: 84px;
-  height: 42px;
-  border-radius: 5px;
-  background:
-    radial-gradient(circle at 50% 50%, var(--bill) 0 11px, transparent 12px),
-    linear-gradient(135deg, #8fd48f, var(--bill) 50%, #4f9a53);
-  border: 2px solid var(--bill-dark);
-  box-shadow: 0 4px 12px rgb(var(--shadow) / 0.3);
-  display: grid;
-  place-items: center;
-}
 
-.bill-value {
-  font-size: 0.8rem;
-  font-weight: 800;
-  color: var(--bill-dark);
-}
 
-.bill-flame {
-  position: absolute;
-  right: -8px;
-  bottom: -10px;
-  font-size: 1.1rem;
-}
 
 /* Settings */
 
@@ -534,8 +429,7 @@ main {
   gap: 0.6rem;
 }
 
-.settings-row-title,
-.settings-row .stepper-compact label {
+.settings-row .settings-row-title {
   font-weight: 600;
   color: var(--text);
 }
@@ -661,10 +555,6 @@ main {
 }
 
 
-/* A compact stepper with a unit needs room for the number next to "€/h". */
-.stepper-compact .stepper-input:has(.stepper-suffix) {
-  flex-basis: 5.2rem;
-}
 
 .attendees {
   display: flex;
@@ -756,58 +646,10 @@ main {
   background: transparent;
 }
 
-/* Compact stepper: one row, label left, small controls right. */
-.stepper-compact {
-  flex-direction: row;
-  align-items: center;
-  justify-content: space-between;
-  gap: 0.75rem;
-  text-align: left;
-}
-
-.stepper-compact label {
-  font-size: 0.9rem;
-}
-
-.stepper-compact .stepper-controls {
-  flex-shrink: 0;
-}
-
-.stepper-compact .stepper-controls > button {
-  width: 2rem;
-  height: 2rem;
-  font-size: 1.1rem;
-}
-
-.stepper-compact .stepper-input {
-  flex: 0 0 3.2rem;
-}
-
-.stepper-compact .stepper-input input {
-  min-height: 2rem;
-  font-size: 1rem;
-}
-
-
 /* Phones: the settings button shrinks to its icon so the header stays on one line,
    and the quick start card gives its content more width. */
 @media (max-width: 480px) {
-  /* Role rates are typed directly on phones, which leaves room for the role name. */
-  .role-row .stepper-controls > button {
-    display: none;
-  }
 
-  /* Options size to their text so none of them wraps. */
-  .segmented {
-    display: flex;
-  }
-
-  .segmented button {
-    flex: 1 1 auto;
-    padding: 0.55rem 0.4rem;
-    font-size: 0.85rem;
-    white-space: nowrap;
-  }
 
   .preset-pills {
     gap: 0.4rem;
@@ -827,113 +669,4 @@ main {
   .stats dt {
     font-size: 0.65rem;
   }
-}
-
-.segmented {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 0.25rem;
-  padding: 0.25rem;
-  border-radius: 12px;
-  border: 1px solid var(--border);
-  background: var(--bg);
-}
-
-.segmented button {
-  position: relative;
-  border: none;
-  background: transparent;
-  border-radius: 9px;
-  padding: 0.6rem 0.4rem;
-  font-weight: 600;
-  color: var(--text-muted);
-}
-
-.segmented button.segmented-active {
-  color: var(--text);
-}
-
-.segmented-indicator {
-  position: absolute;
-  inset: 0;
-  border-radius: 9px;
-  background: var(--surface-2);
-  border: 1px solid var(--accent);
-}
-
-.segmented-label {
-  position: relative;
-}
-
-
-/* Confirm dialog (native <dialog>, opened with showModal) */
-
-.dialog {
-  width: min(400px, calc(100vw - 32px));
-  padding: 0;
-  border: 1px solid var(--border);
-  border-radius: 18px;
-  background: var(--surface);
-  color: var(--text);
-  box-shadow: 0 24px 64px rgb(var(--shadow) / 0.35);
-}
-
-.dialog::backdrop {
-  background: rgb(var(--shadow) / 0.55);
-  backdrop-filter: blur(3px);
-}
-
-.dialog[open] {
-  animation: dialog-in 0.18s ease-out;
-}
-
-.dialog[open]::backdrop {
-  animation: backdrop-in 0.18s ease-out;
-}
-
-@keyframes dialog-in {
-  from {
-    opacity: 0;
-    transform: translateY(8px) scale(0.97);
-  }
-}
-
-@keyframes backdrop-in {
-  from {
-    opacity: 0;
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .dialog[open],
-  .dialog[open]::backdrop {
-    animation: none;
-  }
-}
-
-.dialog-body {
-  display: flex;
-  flex-direction: column;
-  gap: 0.6rem;
-  padding: 1.4rem;
-}
-
-.dialog-title {
-  margin: 0;
-  font-size: 1.15rem;
-  letter-spacing: normal;
-  text-transform: none;
-  color: var(--text);
-}
-
-.dialog-message {
-  margin: 0 0 0.6rem;
-  color: var(--text-muted);
-  line-height: 1.45;
-}
-
-.dialog-actions {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 0.6rem;
 }

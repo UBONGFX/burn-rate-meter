@@ -1,5 +1,7 @@
 import { useId, useState, type ReactNode } from 'react'
 import { useI18n } from '../i18n/useI18n'
+import { cx } from '../lib/cx'
+import styles from './Stepper.module.css'
 
 type StepperProps = {
   /** Accessible name; also shown unless `display` is given. */
@@ -16,6 +18,12 @@ type StepperProps = {
   compact?: boolean
   /** Keep the label for screen readers only, when the row already makes it obvious. */
   hideLabel?: boolean
+  /** Extra class for the visible label, e.g. a two-line name + rate layout. */
+  labelClassName?: string
+  /** Show the value as secondary, e.g. for roles nobody brings. */
+  muted?: boolean
+  /** Hide −/+ on phones: the value is typed directly, leaving room for the label. */
+  typedOnPhone?: boolean
 }
 
 export function Stepper({
@@ -29,6 +37,9 @@ export function Stepper({
   suffix,
   compact = false,
   hideLabel = false,
+  labelClassName,
+  muted = false,
+  typedOnPhone = false,
 }: StepperProps) {
   const { t } = useI18n()
   const id = useId()
@@ -43,22 +54,24 @@ export function Stepper({
   const clamp = (n: number) => Math.min(max, Math.max(min, n))
 
   return (
-    <div className={compact ? 'stepper stepper-compact' : 'stepper'}>
-      <label htmlFor={id} className={hideLabel ? 'sr-only' : undefined}>
+    <div className={cx(styles.stepper, compact && styles.compact, typedOnPhone && styles.typedOnPhone)}>
+      <label htmlFor={id} className={hideLabel ? 'sr-only' : cx(styles.label, labelClassName)}>
         {display ?? label}
       </label>
-      <div className="stepper-controls">
+      <div className={styles.controls}>
         <button
           type="button"
+          className={styles.step}
           aria-label={t.stepper.decrease(label)}
           onClick={() => onChange(clamp(value - step))}
           disabled={value <= min}
         >
           −
         </button>
-        <div className="stepper-input">
+        <div className={styles.field}>
           <input
             id={id}
+            className={cx(styles.input, muted && styles.muted)}
             aria-label={display ? label : undefined}
             type="number"
             inputMode="numeric"
@@ -72,10 +85,11 @@ export function Stepper({
             }}
             onBlur={() => setDraft(String(value))}
           />
-          {suffix && <span className="stepper-suffix">{suffix}</span>}
+          {suffix && <span className={styles.suffix}>{suffix}</span>}
         </div>
         <button
           type="button"
+          className={styles.step}
           aria-label={t.stepper.increase(label)}
           onClick={() => onChange(clamp(value + step))}
           disabled={value >= max}

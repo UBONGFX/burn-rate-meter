@@ -99,6 +99,7 @@ export function Settings({ settings, onChange, onReset }: SettingsProps) {
           <div className="settings-row">
             <Stepper
               compact
+              labelClassName="settings-row-title"
               label={t.settings.billValue}
               value={settings.billValue}
               onChange={(billValue) => update({ billValue })}
@@ -127,6 +128,7 @@ export function Settings({ settings, onChange, onReset }: SettingsProps) {
                   <Stepper
                     compact
                     hideLabel
+                    typedOnPhone
                     label={t.settings.hourlyRate}
                     value={role.hourlyRate}
                     onChange={(hourlyRate) => updateRole(role.id, { hourlyRate })}

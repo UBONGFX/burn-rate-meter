@@ -1,0 +1,43 @@
+.segmented {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.25rem;
+  padding: 0.25rem;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  background: var(--bg);
+}
+
+.option {
+  position: relative;
+  border: none;
+  background: transparent;
+  border-radius: 9px;
+  padding: 0.6rem 0.4rem;
+  font-weight: 600;
+  color: var(--text-muted);
+}
+
+.option.active {
+  color: var(--text);
+}
+
+.indicator {
+  position: absolute;
+  inset: 0;
+  border-radius: 9px;
+  background: var(--surface-2);
+  border: 1px solid var(--accent);
+}
+
+.label {
+  position: relative;
+}
+
+/* Phones: smaller text that never wraps; the columns grow with their label. */
+@media (max-width: 480px) {
+  .option {
+    font-size: 0.85rem;
+    white-space: nowrap;
+  }
+}

@@ -1,0 +1,35 @@
+.rain {
+  position: fixed;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.bill {
+  position: absolute;
+  top: 0;
+  width: 84px;
+  height: 42px;
+  border-radius: 5px;
+  background:
+    radial-gradient(circle at 50% 50%, var(--bill) 0 11px, transparent 12px),
+    linear-gradient(135deg, #8fd48f, var(--bill) 50%, #4f9a53);
+  border: 2px solid var(--bill-dark);
+  box-shadow: 0 4px 12px rgb(var(--shadow) / 0.3);
+  display: grid;
+  place-items: center;
+}
+
+.value {
+  font-size: 0.8rem;
+  font-weight: 800;
+  color: var(--bill-dark);
+}
+
+.flame {
+  position: absolute;
+  right: -8px;
+  bottom: -10px;
+  font-size: 1.1rem;
+}

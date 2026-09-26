@@ -1,6 +1,7 @@
 import { memo, useEffect, useRef, useState } from 'react'
 import { motion, useReducedMotion } from 'motion/react'
 import { useI18n } from '../i18n/useI18n'
+import styles from './MoneyRain.module.css'
 
 const MAX_BILLS = 30
 // If many bills are due at once (e.g. after a background tab), only drop a few.
@@ -44,11 +45,11 @@ export const MoneyRain = memo(function MoneyRain({ count, billValue }: MoneyRain
   const label = formatEUR(billValue, { rounded: true })
 
   return (
-    <div className="money-rain" aria-hidden="true">
+    <div className={styles.rain} data-rain aria-hidden="true">
       {bills.map((bill) => (
         <motion.div
           key={bill.id}
-          className="bill"
+          className={styles.bill}
           data-testid="bill"
           style={{ left: `${bill.x}%` }}
           initial={{ y: '-15vh', rotate: bill.rotate, opacity: 0 }}
@@ -56,8 +57,8 @@ export const MoneyRain = memo(function MoneyRain({ count, billValue }: MoneyRain
           transition={{ duration: bill.duration, delay: bill.delay, ease: 'easeIn' }}
           onAnimationComplete={() => setBills((current) => current.filter((b) => b.id !== bill.id))}
         >
-          <span className="bill-value">{label}</span>
-          <span className="bill-flame">🔥</span>
+          <span className={styles.value}>{label}</span>
+          <span className={styles.flame}>🔥</span>
         </motion.div>
       ))}
     </div>

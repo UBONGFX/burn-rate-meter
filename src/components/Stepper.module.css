@@ -1,0 +1,119 @@
+.stepper {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  min-width: 0;
+}
+
+.label {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+
+.controls {
+  display: flex;
+  align-items: stretch;
+  gap: 0.4rem;
+}
+
+.step {
+  width: 2.6rem;
+  flex-shrink: 0;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  background: var(--surface-2);
+  font-size: 1.3rem;
+  line-height: 1;
+}
+
+.field {
+  position: relative;
+  flex: 1;
+  min-width: 0;
+}
+
+.input {
+  width: 100%;
+  height: 100%;
+  min-height: 2.6rem;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  background: var(--bg);
+  text-align: center;
+  font-size: 1.15rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  appearance: textfield;
+  -moz-appearance: textfield;
+}
+
+.field:has(.suffix) .input {
+  padding-right: 2.6rem;
+}
+
+.input::-webkit-outer-spin-button,
+.input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.suffix {
+  position: absolute;
+  right: 0.6rem;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  pointer-events: none;
+}
+
+/* For counts that are 0: readable, but clearly secondary */
+.muted {
+  font-weight: 500;
+  color: var(--text-muted);
+}
+
+/* Compact: one row, label left, small controls right */
+
+.compact {
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  text-align: left;
+}
+
+.compact .label {
+  font-size: 0.9rem;
+}
+
+.compact .controls {
+  flex-shrink: 0;
+}
+
+.compact .step {
+  width: 2rem;
+  height: 2rem;
+  font-size: 1.1rem;
+}
+
+.compact .field {
+  flex: 0 0 3.2rem;
+}
+
+/* A unit needs room for the number next to "€/h" */
+.compact .field:has(.suffix) {
+  flex-basis: 5.2rem;
+}
+
+.compact .input {
+  min-height: 2rem;
+  font-size: 1rem;
+}
+
+/* Values are typed directly on phones, which leaves room for the label */
+@media (max-width: 480px) {
+  .typed-on-phone .step {
+    display: none;
+  }
+}

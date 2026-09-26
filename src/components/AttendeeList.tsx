@@ -84,6 +84,8 @@ export function AttendeeRows({ roles, attendance, onChange }: AttendeeRowsProps)
         <li key={role.id} className={countOf(attendance, role.id) === 0 ? 'attendee-absent' : undefined}>
           <Stepper
             compact
+            labelClassName="attendee-row-label"
+            muted={countOf(attendance, role.id) === 0}
             label={t.quickStart.roleLabel(role.name, role.hourlyRate)}
             display={
               <>
