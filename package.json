@@ -1,7 +1,7 @@
 {
   "name": "burn-rate-meter",
   "private": true,
-  "version": "1.2.0",
+  "version": "1.3.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -11,7 +11,8 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "test:e2e": "playwright test",
-    "screenshots": "SCREENSHOTS=1 playwright test e2e/screenshots.spec.ts --project=chromium"
+    "screenshots": "SCREENSHOTS=1 playwright test e2e/screenshots.spec.ts --project=chromium",
+    "brand-assets": "BRAND_ASSETS=1 playwright test e2e/brand-assets.spec.ts --project=chromium"
   },
   "dependencies": {
     "motion": "^13.4.4",

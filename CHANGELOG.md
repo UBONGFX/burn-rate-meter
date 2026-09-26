@@ -2,6 +2,11 @@
 
 All notable changes to this project are documented here. The project follows [Semantic Versioning](https://semver.org).
 
+## 1.3.0 – 2026-09-26
+
+- Installable as an app (home screen icon, full screen without browser bar)
+- Works offline after the first visit
+
 ## 1.2.0 – 2026-09-26
 
 - The screen stays on while a meeting runs (Screen Wake Lock), and turns off normally when paused or ended
