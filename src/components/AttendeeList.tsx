@@ -1,4 +1,5 @@
 import { useState, type ReactNode } from 'react'
+import { ChevronDown, Users } from 'lucide-react'
 import { AnimatePresence, motion } from 'motion/react'
 import { useI18n } from '../i18n/useI18n'
 import { headcount } from '../lib/cost'
@@ -11,12 +12,12 @@ type AttendeeListProps = {
   roles: Role[]
   attendance: Attendance
   onChange: (roleId: string, count: number) => void
-  /** Just a small "👥 Anpassen" link, for screens that already show the headcount (the meter). */
+  /** Just a small "Anpassen" link, for screens that already show the headcount (the meter). */
   minimal?: boolean
 }
 
 /**
- * One calm row ("👥 6 × Developer · 1 × PO   Anpassen ▾") that expands into
+ * One calm row ("6 × Developer · 1 × PO   Anpassen") that expands into
  * per-role counters, so screens stay focused on the money.
  */
 export function AttendeeList({ roles, attendance, onChange, minimal = false }: AttendeeListProps) {
@@ -33,8 +34,8 @@ export function AttendeeList({ roles, attendance, onChange, minimal = false }: A
         aria-expanded={open}
         onClick={() => setOpen((o) => !o)}
       >
-        <span className={styles.icon} aria-hidden="true">
-          👥
+        <span className={styles.icon}>
+          <Users size="1.25em" />
         </span>
         {!minimal && (
           <span className={cx(styles.count, people === 0 && styles.nobody)}>
@@ -112,11 +113,12 @@ export function AttendeeChip({ count, name }: { count: number; name: string }) {
   )
 }
 
-/** "Anpassen ▾" – the chevron flips while the section is open. */
+/** "Anpassen" with a chevron that flips while the section is open. */
 export function ExpandLabel({ open, children }: { open: boolean; children: ReactNode }) {
   return (
     <span className={styles.expand}>
-      {children} <span className={cx(styles.chevron, open && styles.chevronOpen)}>▾</span>
+      {children}
+      <ChevronDown size="1em" className={cx(styles.chevron, open && styles.chevronOpen)} />
     </span>
   )
 }

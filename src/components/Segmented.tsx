@@ -1,3 +1,4 @@
+import type { ReactNode } from 'react'
 import { motion } from 'motion/react'
 import { cx } from '../lib/cx'
 import styles from './Segmented.module.css'
@@ -8,11 +9,12 @@ type SegmentedProps<T extends string> = {
   label: string
   options: readonly T[]
   labels: Record<T, string>
+  icons?: Partial<Record<T, ReactNode>>
   value: T
   onChange: (value: T) => void
 }
 
-export function Segmented<T extends string>({ name, label, options, labels, value, onChange }: SegmentedProps<T>) {
+export function Segmented<T extends string>({ name, label, options, labels, icons, value, onChange }: SegmentedProps<T>) {
   return (
     <div className={styles.segmented} role="radiogroup" aria-label={label}>
       {options.map((option) => (
@@ -25,7 +27,10 @@ export function Segmented<T extends string>({ name, label, options, labels, valu
           onClick={() => onChange(option)}
         >
           {value === option && <motion.span layoutId={`${name}-indicator`} className={styles.indicator} />}
-          <span className={styles.label}>{labels[option]}</span>
+          <span className={styles.label}>
+            {icons?.[option]}
+            {labels[option]}
+          </span>
         </button>
       ))}
     </div>

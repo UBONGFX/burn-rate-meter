@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { Globe, Monitor, Moon, Plus, Sun, Trash2 } from 'lucide-react'
 import { AnimatePresence, motion } from 'motion/react'
 import { LANGUAGES } from '../i18n/locale'
 import { useI18n } from '../i18n/useI18n'
@@ -83,6 +84,7 @@ export function Settings({ settings, onChange, onReset }: SettingsProps) {
               label={t.settings.themeLabel}
               options={THEMES}
               labels={t.settings.themes}
+              icons={{ system: <Monitor size="1.1em" />, light: <Sun size="1.1em" />, dark: <Moon size="1.1em" /> }}
               value={settings.theme}
               onChange={(theme) => update({ theme })}
             />
@@ -94,6 +96,7 @@ export function Settings({ settings, onChange, onReset }: SettingsProps) {
               label={t.settings.language}
               options={LANGUAGES}
               labels={t.settings.languages}
+              icons={{ auto: <Globe size="1.1em" /> }}
               value={settings.language}
               onChange={(language) => update({ language })}
             />
@@ -145,7 +148,7 @@ export function Settings({ settings, onChange, onReset }: SettingsProps) {
                     disabled={roles.length === 1}
                     onClick={() => deleteRole(role.id)}
                   >
-                    🗑
+                    <Trash2 size="1.1em" />
                   </button>
                 </div>
               </motion.li>
@@ -153,6 +156,7 @@ export function Settings({ settings, onChange, onReset }: SettingsProps) {
           </AnimatePresence>
           <li className={styles.item}>
             <button type="button" className={styles.add} onClick={addRole}>
+              <Plus size="1.1em" />
               {t.settings.addRole}
             </button>
           </li>
@@ -215,6 +219,7 @@ export function Settings({ settings, onChange, onReset }: SettingsProps) {
                             aria-label={t.settings.deletePreset(preset.name)}
                             onClick={() => update({ presets: settings.presets.filter((p) => p.id !== preset.id) })}
                           >
+                            <Trash2 size="1.1em" />
                             {t.settings.deletePresetText}
                           </Button>
                         </div>
@@ -227,6 +232,7 @@ export function Settings({ settings, onChange, onReset }: SettingsProps) {
           </AnimatePresence>
           <li className={styles.item}>
             <button type="button" className={styles.add} onClick={addPreset}>
+              <Plus size="1.1em" />
               {t.settings.addPreset}
             </button>
           </li>

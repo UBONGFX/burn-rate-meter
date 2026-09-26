@@ -17,6 +17,8 @@
 }
 
 .step {
+  display: grid;
+  place-items: center;
   width: 2.6rem;
   flex-shrink: 0;
   border-radius: var(--radius-sm);

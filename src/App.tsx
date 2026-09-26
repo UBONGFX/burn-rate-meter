@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { AnimatePresence, motion } from 'motion/react'
+import { ArrowLeft, Settings as SettingsIcon } from 'lucide-react'
 import { Button } from './components/Button'
 import { Meter } from './components/Meter'
 import { QuickStart, type MeetingConfig } from './components/QuickStart'
@@ -51,11 +52,13 @@ function App() {
           </button>
           {view === 'start' && (
             <Button variant="ghost" aria-label={t.nav.settings} onClick={() => setView('settings')}>
-              ⚙️<span className={styles.navLabel}> {t.nav.settings}</span>
+              <SettingsIcon size="1.1em" />
+              <span className={styles.navLabel}>{t.nav.settings}</span>
             </Button>
           )}
           {view === 'settings' && (
             <Button variant="ghost" onClick={() => setView('start')}>
+              <ArrowLeft size="1.1em" />
               {t.nav.back}
             </Button>
           )}

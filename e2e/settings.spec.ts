@@ -65,7 +65,7 @@ test('counts stop at zero and a meeting needs at least one person', async ({ pag
 
 test('a role can be added with its own rate and used in the quick start', async ({ page }) => {
   await openSettings(page)
-  await rolesSection(page).getByRole('button', { name: '+ Rolle hinzufügen' }).click()
+  await rolesSection(page).getByRole('button', { name: 'Rolle hinzufügen' }).click()
   const row = roleRows(page).last()
   await row.getByLabel('Name der Rolle').fill('UX Designer')
   await row.getByLabel('Stundensatz', { exact: true }).fill('60')
@@ -120,7 +120,7 @@ test('the last role cannot be deleted', async ({ page }) => {
 
 test('a preset can be added, edited and used', async ({ page }) => {
   await openSettings(page)
-  await page.getByRole('button', { name: '+ Vorlage hinzufügen' }).click()
+  await page.getByRole('button', { name: 'Vorlage hinzufügen' }).click()
 
   // A new preset opens right away for editing
   const row = presetRows(page).last()

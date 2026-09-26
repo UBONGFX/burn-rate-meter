@@ -2,6 +2,10 @@
 
 All notable changes to this project are documented here. The project follows [Semantic Versioning](https://semver.org).
 
+## 1.4.0 – 2026-09-26
+
+- Clean line icons (Lucide) instead of emojis on buttons and options; the 🔥 logo and the pizza comparison stay
+
 ## 1.3.3 – 2026-09-26
 
 - The quick start price is as large as the meeting counter

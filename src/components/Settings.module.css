@@ -93,6 +93,8 @@
 }
 
 .icon-button {
+  display: grid;
+  place-items: center;
   width: 2rem;
   height: 2rem;
   border: none;
@@ -121,6 +123,9 @@
 }
 
 .add {
+  display: flex;
+  align-items: center;
+  gap: var(--space-8);
   color: var(--accent-text);
 }
 
