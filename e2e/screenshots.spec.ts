@@ -19,6 +19,14 @@ async function setUp(page: Page, settings: object = {}) {
   await page.addInitScript(() => {
     delete (Element.prototype as Partial<Element>).animate
   })
+  // Seeded Math.random, so the falling bills land in the same places every time
+  await page.addInitScript(() => {
+    let seed = 42
+    Math.random = () => {
+      seed = (seed * 1664525 + 1013904223) % 4294967296
+      return seed / 4294967296
+    }
+  })
   await page.addInitScript((stored) => {
     localStorage.setItem('burn-rate-meter:settings', JSON.stringify({ version: 3, settings: stored }))
   }, settings)
@@ -36,7 +44,7 @@ test('quick start', async ({ page }) => {
   await setUp(page)
   await page.getByRole('button', { name: /ART-Meeting/ }).click()
   await page.clock.runFor(500)
-  await page.screenshot({ path: `${OUT}/quick-start.png` })
+  await page.screenshot({ path: `${OUT}/quick-start.png`, animations: 'disabled' })
 })
 
 test('meter', async ({ page }) => {
@@ -47,7 +55,7 @@ test('meter', async ({ page }) => {
   // Mid-fall: the burst from fast-forwarding plus the regular ones
   await page.clock.runFor(2300)
   await expect(page.getByTestId('bill').first()).toBeVisible()
-  await page.screenshot({ path: `${OUT}/meter.png` })
+  await page.screenshot({ path: `${OUT}/meter.png`, animations: 'disabled' })
 })
 
 test('result', async ({ page }) => {
@@ -57,5 +65,5 @@ test('result', async ({ page }) => {
   await page.getByRole('button', { name: /End/ }).click()
   // Let the last bills finish falling
   await page.clock.runFor(6000)
-  await page.screenshot({ path: `${OUT}/result.png` })
+  await page.screenshot({ path: `${OUT}/result.png`, animations: 'disabled' })
 })
