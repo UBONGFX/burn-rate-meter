@@ -6,6 +6,7 @@ import { QuickStart, type MeetingConfig } from './components/QuickStart'
 import { Settings } from './components/Settings'
 import { useSettings } from './hooks/useSettings'
 import { I18nContext, useLocaleI18n } from './i18n/useI18n'
+import styles from './App.module.css'
 
 type View = 'start' | 'meter' | 'settings'
 
@@ -43,14 +44,14 @@ function App() {
 
   return (
     <I18nContext.Provider value={i18n}>
-      <div className="app">
-        <header className="app-header">
-          <button type="button" className="logo" onClick={() => view !== 'meter' && setView('start')}>
-            <span className="logo-flame">🔥</span> Burn Rate Meter
+      <div className={styles.app}>
+        <header className={styles.header}>
+          <button type="button" className={styles.logo} onClick={() => view !== 'meter' && setView('start')}>
+            <span className={styles.logoFlame}>🔥</span> Burn Rate Meter
           </button>
           {view === 'start' && (
             <Button variant="ghost" aria-label={t.nav.settings} onClick={() => setView('settings')}>
-              ⚙️<span className="nav-label"> {t.nav.settings}</span>
+              ⚙️<span className={styles.navLabel}> {t.nav.settings}</span>
             </Button>
           )}
           {view === 'settings' && (
@@ -60,7 +61,7 @@ function App() {
           )}
         </header>
 
-        <main>
+        <main className={styles.main}>
           <AnimatePresence mode="wait">
             {view === 'start' && (
               <motion.div key="start" {...pageTransition}>

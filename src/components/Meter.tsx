@@ -12,9 +12,11 @@ import {
   startSegment,
 } from '../lib/cost'
 import type { Attendance } from '../lib/settings'
+import { cx } from '../lib/cx'
 import { AttendeeList } from './AttendeeList'
 import { Button } from './Button'
 import { MoneyRain } from './MoneyRain'
+import styles from './Meter.module.css'
 import { Summary } from './Summary'
 import type { MeetingConfig } from './QuickStart'
 
@@ -52,24 +54,24 @@ export function Meter({ config, billValue, onRestart, onNew }: MeterProps) {
   }
 
   return (
-    <section className="meter">
+    <section className={styles.meter}>
       <MoneyRain count={status === 'ended' ? 0 : billCount} billValue={billValue} />
 
-      <p className="meter-label">
+      <p className={styles.label}>
         {config.name ?? t.meter.defaultName} · {t.meter.status[status]}
       </p>
 
-      <div className="counter-wrap">
+      <div className={styles.counterWrap}>
         {status === 'running' && !reduceMotion && (
           <motion.div
-            className="counter-glow"
+            className={styles.counterGlow}
             animate={{ opacity: [0.45, 0.8, 0.5, 0.7, 0.45], scale: [1, 1.06, 0.98, 1.04, 1] }}
             transition={{ duration: 2.4, repeat: Infinity, ease: 'easeInOut' }}
           />
         )}
         <motion.div
           key={billCount}
-          className={`counter ${status === 'paused' ? 'counter-paused' : ''}`}
+          className={cx(styles.counter, status === 'paused' && styles.paused)}
           data-testid="meter-total"
           initial={reduceMotion || billCount === 0 ? false : { scale: 1.06 }}
           animate={{ scale: 1 }}
@@ -81,7 +83,7 @@ export function Meter({ config, billValue, onRestart, onNew }: MeterProps) {
         </motion.div>
       </div>
 
-      <dl className="stats">
+      <dl className={styles.stats}>
         <div>
           <dt>{t.meter.duration}</dt>
           <dd>{formatDuration(elapsedMs)}</dd>
@@ -100,7 +102,7 @@ export function Meter({ config, billValue, onRestart, onNew }: MeterProps) {
         {status === 'ended' ? (
           <motion.div
             key="summary"
-            className="summary-wrap"
+            className={styles.summaryWrap}
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
@@ -116,12 +118,12 @@ export function Meter({ config, billValue, onRestart, onNew }: MeterProps) {
         ) : (
           <motion.div
             key="controls"
-            className="controls"
+            className={styles.controls}
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
           >
-            <div className="actions">
+            <div className={styles.actions}>
               {status === 'running' ? (
                 <Button onClick={pause}>{t.meter.pause}</Button>
               ) : (

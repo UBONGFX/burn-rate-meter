@@ -3,8 +3,10 @@ import { motion } from 'motion/react'
 import { useI18n } from '../i18n/useI18n'
 import { costPerMinute, headcount, hourlyTotal } from '../lib/cost'
 import { countOf, type Attendance, type Role, type Settings } from '../lib/settings'
+import { cx } from '../lib/cx'
 import { AttendeeList } from './AttendeeList'
 import { buttonClass } from './buttonClass'
+import styles from './QuickStart.module.css'
 
 export type MeetingConfig = {
   name: string | null
@@ -32,24 +34,24 @@ export function QuickStart({ settings, onStart }: QuickStartProps) {
   const total = hourlyTotal(roles, attendance)
 
   return (
-    <section className="quick-start">
+    <section className={styles.quickStart}>
       {/* The price is the hero, echoing the meter the meeting will run on. */}
-      <div className="qs-hero" aria-live="polite">
-        <h2 className="qs-kicker">{t.quickStart.title}</h2>
-        <p className="qs-price" data-testid="price-per-minute">{formatEUR(costPerMinute(total))}</p>
-        <p className="qs-unit">{t.quickStart.perMinute}</p>
-        <p className="qs-sub">{t.quickStart.perHour(formatEUR(total, { rounded: true }))}</p>
+      <div className={styles.hero} aria-live="polite">
+        <h2 className={styles.kicker}>{t.quickStart.title}</h2>
+        <p className={styles.price} data-testid="price-per-minute">{formatEUR(costPerMinute(total))}</p>
+        <p className={styles.unit}>{t.quickStart.perMinute}</p>
+        <p className={styles.sub}>{t.quickStart.perHour(formatEUR(total, { rounded: true }))}</p>
       </div>
 
       {presets.length > 0 && (
-        <div className="preset-pills" role="group" aria-label={t.quickStart.presets}>
+        <div className={styles.pills} role="group" aria-label={t.quickStart.presets}>
           {presets.map((p) => {
             const active = activePreset?.id === p.id
             return (
               <motion.button
                 key={p.id}
                 type="button"
-                className={active ? 'preset-pill preset-pill-active' : 'preset-pill'}
+                className={cx(styles.pill, active && styles.pillActive)}
                 aria-pressed={active}
                 whileTap={{ scale: 0.96 }}
                 onClick={() => {
@@ -58,7 +60,7 @@ export function QuickStart({ settings, onStart }: QuickStartProps) {
                 }}
               >
                 {p.name}
-                <span className="preset-pill-count" aria-label={t.quickStart.people(headcount(p.attendance))}>
+                <span className={styles.pillCount} aria-label={t.quickStart.people(headcount(p.attendance))}>
                   {headcount(p.attendance)}
                 </span>
               </motion.button>

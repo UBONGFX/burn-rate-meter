@@ -2,7 +2,10 @@ import { motion, useReducedMotion } from 'motion/react'
 import { useI18n } from '../i18n/useI18n'
 import { compareCost } from '../lib/cost'
 import { countOf, type Attendance, type Role } from '../lib/settings'
+import { cx } from '../lib/cx'
+import { AttendeeChip } from './AttendeeList'
 import { Button } from './Button'
+import styles from './Summary.module.css'
 
 // Up to this many, the comparison shows one emoji per item ("🍕🍕🍕").
 const MAX_EMOJIS = 12
@@ -25,9 +28,9 @@ export function Summary({ cost, roles, attendance, onNew, onRestart }: SummaryPr
   const emojiCount = comparison && comparison.count <= MAX_EMOJIS ? comparison.count : 1
 
   return (
-    <div className="summary" data-testid="summary">
-      <div className="summary-card">
-        <div className={emojiCount === 1 ? 'summary-emojis summary-emojis-single' : 'summary-emojis'} aria-hidden="true">
+    <div className={styles.summary} data-testid="summary">
+      <div className={styles.card}>
+        <div className={cx(styles.emojis, emojiCount === 1 && styles.emojisSingle)} aria-hidden="true">
           {Array.from({ length: emojiCount }, (_, i) => (
             <motion.span
               key={i}
@@ -42,30 +45,28 @@ export function Summary({ cost, roles, attendance, onNew, onRestart }: SummaryPr
 
         {comparison ? (
           <>
-            <p className="summary-kicker">{t.meter.comparisonPrefix}</p>
-            <p className="summary-headline">
+            <p className={styles.kicker}>{t.meter.comparisonPrefix}</p>
+            <p className={styles.headline}>
               {comparison.count} {t.comparisons[comparison.key][comparison.count === 1 ? 0 : 1]}
             </p>
           </>
         ) : (
           <>
-            <p className="summary-headline">{t.meter.noComparison}</p>
-            <p className="summary-sub">{t.meter.noComparisonSub}</p>
+            <p className={styles.headline}>{t.meter.noComparison}</p>
+            <p className={styles.sub}>{t.meter.noComparisonSub}</p>
           </>
         )}
 
         {present.length > 0 && (
-          <div className="summary-chips">
+          <div className={styles.chips}>
             {present.map((role) => (
-              <span key={role.id} className="attendee-chip" data-testid="attendee-chip">
-                <b>{countOf(attendance, role.id)}</b> {role.name}
-              </span>
+              <AttendeeChip key={role.id} count={countOf(attendance, role.id)} name={role.name} />
             ))}
           </div>
         )}
       </div>
 
-      <div className="summary-actions">
+      <div className={styles.actions}>
         <Button size="medium" onClick={onNew}>
           {t.meter.newMeeting}
         </Button>

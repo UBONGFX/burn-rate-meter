@@ -1,0 +1,74 @@
+.summary {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 1.5rem 1.25rem 1.25rem;
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  background: var(--surface);
+}
+
+.card p {
+  margin: 0;
+}
+
+.emojis {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.1rem;
+  margin-bottom: 0.5rem;
+  font-size: 2.25rem;
+  line-height: 1.1;
+}
+
+.emojis-single {
+  font-size: 3.5rem;
+}
+
+.emojis span {
+  display: inline-block;
+}
+
+.kicker {
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.headline {
+  font-size: 1.6rem;
+  font-weight: 800;
+  letter-spacing: -0.01em;
+}
+
+.sub {
+  color: var(--text-muted);
+}
+
+/* Who was there, separated like the bottom of a receipt. */
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.35rem;
+  width: 100%;
+  margin-top: 0.9rem;
+  padding-top: 1rem;
+  border-top: 1px dashed var(--border);
+}
+
+.actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.6rem;
+}

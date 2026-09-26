@@ -1,0 +1,101 @@
+.quick-start {
+  display: flex;
+  flex-direction: column;
+  gap: 1.75rem;
+  width: 100%;
+  max-width: 440px;
+  margin: 0 auto;
+}
+
+.hero {
+  text-align: center;
+}
+
+.kicker {
+  margin: 0 0 0.5rem;
+  font-size: 0.8rem;
+  letter-spacing: 0.12em;
+}
+
+.price {
+  margin: 0;
+  font-size: clamp(3.25rem, 16vw, 4.75rem);
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: -0.03em;
+  font-variant-numeric: tabular-nums;
+  background: linear-gradient(180deg, var(--counter-top), var(--accent) 45%, var(--accent-2));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.unit {
+  margin: 0.35rem 0 0;
+  font-weight: 600;
+  color: var(--text-muted);
+}
+
+.sub {
+  margin: 0.6rem 0 0;
+  font-size: 0.9rem;
+  color: var(--text-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+/* Preset pills */
+.pills {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 0.55rem 0.5rem 1rem;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: var(--surface);
+  font-weight: 600;
+  transition: border-color 0.15s, background 0.15s, color 0.15s;
+}
+
+.pill:hover {
+  border-color: var(--accent);
+}
+
+.pill-count {
+  min-width: 1.8rem;
+  padding: 0.1rem 0.45rem;
+  border-radius: 999px;
+  background: var(--surface-2);
+  font-size: 0.8rem;
+  font-variant-numeric: tabular-nums;
+  color: var(--text-muted);
+}
+
+.pill-active {
+  border-color: transparent;
+  background: linear-gradient(135deg, var(--cta-from), var(--cta-to));
+  color: #fff;
+  box-shadow: 0 4px 16px rgb(var(--glow) / calc(0.3 * var(--glow-strength)));
+}
+
+.pill-active .pill-count {
+  background: rgb(255 255 255 / 0.22);
+  color: #fff;
+}
+
+@media (max-width: 480px) {
+  .pills {
+    gap: 0.4rem;
+  }
+
+  .pill {
+    padding: 0.45rem 0.45rem 0.45rem 0.8rem;
+    font-size: 0.9rem;
+  }
+}

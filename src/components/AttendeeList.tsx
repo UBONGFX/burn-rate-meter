@@ -1,8 +1,10 @@
-import { useState } from 'react'
+import { useState, type ReactNode } from 'react'
 import { AnimatePresence, motion } from 'motion/react'
 import { useI18n } from '../i18n/useI18n'
 import { headcount } from '../lib/cost'
 import { LIMITS, countOf, type Attendance, type Role } from '../lib/settings'
+import { cx } from '../lib/cx'
+import styles from './AttendeeList.module.css'
 import { Stepper } from './Stepper'
 
 type AttendeeListProps = {
@@ -24,31 +26,27 @@ export function AttendeeList({ roles, attendance, onChange, minimal = false }: A
   const people = headcount(attendance)
 
   return (
-    <div className={minimal ? 'attendees attendees-minimal' : 'attendees'}>
+    <div className={cx(styles.attendees, minimal && styles.minimal)}>
       <button
         type="button"
-        className="attendees-toggle"
+        className={styles.toggle}
         aria-expanded={open}
         onClick={() => setOpen((o) => !o)}
       >
-        <span className="attendees-icon" aria-hidden="true">
+        <span className={styles.icon} aria-hidden="true">
           👥
         </span>
         {!minimal && (
-          <span className={people > 0 ? 'attendees-count' : 'attendees-count attendees-nobody'}>
+          <span className={cx(styles.count, people === 0 && styles.nobody)}>
             {people > 0 ? t.quickStart.people(people) : t.attendees.nobody}
           </span>
         )}
-        <span className="attendees-action">
-          {minimal ? t.attendees.adjustAttendees : t.attendees.adjust} <span className={open ? 'chevron chevron-open' : 'chevron'}>▾</span>
-        </span>
+        <ExpandLabel open={open}>{minimal ? t.attendees.adjustAttendees : t.attendees.adjust}</ExpandLabel>
         {/* While open, the list below shows the same counts. */}
         {!minimal && !open && present.length > 0 && (
-          <span className="attendees-summary">
+          <span className={styles.summary}>
             {present.map((role) => (
-              <span key={role.id} className="attendee-chip" data-testid="attendee-chip">
-                <b>{countOf(attendance, role.id)}</b> {role.name}
-              </span>
+              <AttendeeChip key={role.id} count={countOf(attendance, role.id)} name={role.name} />
             ))}
           </span>
         )}
@@ -56,7 +54,7 @@ export function AttendeeList({ roles, attendance, onChange, minimal = false }: A
       <AnimatePresence initial={false}>
         {open && (
           <motion.div
-            className="attendees-panel"
+            className={styles.panel}
             initial={{ height: 0, opacity: 0 }}
             animate={{ height: 'auto', opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
@@ -73,24 +71,26 @@ type AttendeeRowsProps = {
   roles: Role[]
   attendance: Attendance
   onChange: (roleId: string, count: number) => void
+  /** Placed inside another card, e.g. the preset editor */
+  inset?: boolean
 }
 
 /** One compact counter row per role; roles nobody brings are dimmed. */
-export function AttendeeRows({ roles, attendance, onChange }: AttendeeRowsProps) {
+export function AttendeeRows({ roles, attendance, onChange, inset = false }: AttendeeRowsProps) {
   const { t } = useI18n()
   return (
-    <ul className="attendee-list">
+    <ul className={cx(styles.list, inset && styles.inset)}>
       {roles.map((role) => (
-        <li key={role.id} className={countOf(attendance, role.id) === 0 ? 'attendee-absent' : undefined}>
+        <li key={role.id} className={countOf(attendance, role.id) === 0 ? styles.absent : undefined}>
           <Stepper
             compact
-            labelClassName="attendee-row-label"
+            labelClassName={styles.rowLabel}
             muted={countOf(attendance, role.id) === 0}
             label={t.quickStart.roleLabel(role.name, role.hourlyRate)}
             display={
               <>
-                <span className="attendee-name">{role.name}</span>
-                <span className="attendee-rate">{t.quickStart.rate(role.hourlyRate)}</span>
+                <span className={styles.name}>{role.name}</span>
+                <span className={styles.rate}>{t.quickStart.rate(role.hourlyRate)}</span>
               </>
             }
             value={countOf(attendance, role.id)}
@@ -100,5 +100,23 @@ export function AttendeeRows({ roles, attendance, onChange }: AttendeeRowsProps)
         </li>
       ))}
     </ul>
+  )
+}
+
+/** "6 Developer" */
+export function AttendeeChip({ count, name }: { count: number; name: string }) {
+  return (
+    <span className={styles.chip} data-testid="attendee-chip">
+      <b>{count}</b> {name}
+    </span>
+  )
+}
+
+/** "Anpassen ▾" – the chevron flips while the section is open. */
+export function ExpandLabel({ open, children }: { open: boolean; children: ReactNode }) {
+  return (
+    <span className={styles.expand}>
+      {children} <span className={cx(styles.chevron, open && styles.chevronOpen)}>▾</span>
+    </span>
   )
 }
