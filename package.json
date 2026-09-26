@@ -10,7 +10,8 @@
     "preview": "vite preview",
     "test": "vitest run",
     "test:watch": "vitest",
-    "test:e2e": "playwright test"
+    "test:e2e": "playwright test",
+    "screenshots": "SCREENSHOTS=1 playwright test e2e/screenshots.spec.ts"
   },
   "dependencies": {
     "motion": "^13.4.4",

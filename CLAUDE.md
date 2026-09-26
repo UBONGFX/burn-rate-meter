@@ -13,6 +13,7 @@ npx vitest run src/lib/cost.test.ts  # single test file
 npx vitest run -t "headcount"        # tests matching a name
 npm run lint                         # oxlint (not ESLint), config in .oxlintrc.json
 npm run build                        # tsc -b + vite build
+npm run screenshots                  # regenerate docs/screenshots (e2e/screenshots.spec.ts, skipped otherwise)
 ```
 
 ## Architecture
