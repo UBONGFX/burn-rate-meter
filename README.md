@@ -2,6 +2,8 @@
 
 How much money is this meeting burning right now? Pick who is in the room, start the meeting – and watch the bills fall.
 
+**▶ [Open the app](https://ubongfx.github.io/burn-rate-meter/)**
+
 <p align="center">
   <img src="docs/screenshots/quick-start.png" width="250" alt="Quick start: cost per minute, preset pills and attendees by role">
   <img src="docs/screenshots/meter.png" width="250" alt="Running meeting: live counter with falling bills">
