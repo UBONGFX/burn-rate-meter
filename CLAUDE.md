@@ -17,6 +17,18 @@ npm run build                        # tsc -b + vite build
 npm run screenshots                  # regenerate docs/screenshots (e2e/screenshots.spec.ts, skipped otherwise)
 ```
 
+## Workflow
+
+`main` is protected by a GitHub ruleset: no direct pushes, force pushes or deletion. Every change goes through a pull request that is squash-merged once both CI jobs ("Lint, unit tests, build" and "End-to-end tests") pass; the branch is deleted on merge.
+
+```bash
+git switch -c <topic>                 # one branch per change
+git push -u origin <topic>
+gh pr create --fill                   # title/body become the squash commit
+gh pr checks --watch                  # wait for CI
+gh pr merge --squash                  # then: git switch main && git pull
+```
+
 ## Architecture
 
 A single-page React 19 + TypeScript app (Vite), with no router and no backend. `App.tsx` switches between three views (`start` | `meter` | `settings`) using `useState` and animates the transitions with `AnimatePresence`.
