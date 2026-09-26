@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { AnimatePresence, motion, useReducedMotion } from 'motion/react'
+import { Pause, Play, Square } from 'lucide-react'
 import { useMeetingTimer } from '../hooks/useMeetingTimer'
 import { useWakeLock } from '../hooks/useWakeLock'
 import { useI18n } from '../i18n/useI18n'
@@ -124,11 +125,18 @@ export function Meter({ config, billValue, onRestart, onNew }: MeterProps) {
           >
             <div className={styles.actions}>
               {status === 'running' ? (
-                <Button onClick={pause}>{t.meter.pause}</Button>
+                <Button onClick={pause}>
+                  <Pause size="1.1em" />
+                  {t.meter.pause}
+                </Button>
               ) : (
-                <Button onClick={resume}>{t.meter.resume}</Button>
+                <Button onClick={resume}>
+                  <Play size="1.1em" />
+                  {t.meter.resume}
+                </Button>
               )}
               <Button variant="danger" onClick={stop}>
+                <Square size="1em" />
                 {t.meter.end}
               </Button>
             </div>

@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { Flame } from 'lucide-react'
 import { motion } from 'motion/react'
 import { useI18n } from '../i18n/useI18n'
 import { costPerMinute, headcount, hourlyTotal } from '../lib/cost'
@@ -90,6 +91,7 @@ export function QuickStart({ settings, onStart }: QuickStartProps) {
         disabled={people === 0}
         onClick={() => onStart({ name: activePreset?.name ?? null, roles, attendance })}
       >
+        <Flame size="1.1em" />
         {t.quickStart.start}
       </motion.button>
     </section>

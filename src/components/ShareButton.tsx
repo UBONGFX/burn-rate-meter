@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { Share2 } from 'lucide-react'
 import { useI18n } from '../i18n/useI18n'
 import { shareText, type MeetingResult } from '../lib/share'
 import { renderShareImage } from '../lib/shareImage'
@@ -80,6 +81,7 @@ export function ShareButton({ result }: { result: MeetingResult }) {
   return (
     <div className={styles.share}>
       <Button size="medium" className={styles.button} disabled={busy} onClick={share}>
+        <Share2 size="1.1em" />
         {t.share.button}
       </Button>
       <p className={styles.status} role="status">

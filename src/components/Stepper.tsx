@@ -1,4 +1,5 @@
 import { useId, useState, type ReactNode } from 'react'
+import { Minus, Plus } from 'lucide-react'
 import { useI18n } from '../i18n/useI18n'
 import { cx } from '../lib/cx'
 import styles from './Stepper.module.css'
@@ -66,7 +67,7 @@ export function Stepper({
           onClick={() => onChange(clamp(value - step))}
           disabled={value <= min}
         >
-          −
+          <Minus size="0.9em" />
         </button>
         <div className={styles.field}>
           <input
@@ -94,7 +95,7 @@ export function Stepper({
           onClick={() => onChange(clamp(value + step))}
           disabled={value >= max}
         >
-          +
+          <Plus size="0.9em" />
         </button>
       </div>
     </div>

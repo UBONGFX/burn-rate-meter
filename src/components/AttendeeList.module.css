@@ -24,7 +24,8 @@
 }
 
 .icon {
-  font-size: var(--text-lg);
+  display: flex;
+  color: var(--text-muted);
 }
 
 .count {
@@ -128,6 +129,9 @@
 /* "Anpassen ▾" */
 
 .expand {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
   flex-shrink: 0;
   font-size: var(--text-sm);
   font-weight: 600;
@@ -135,7 +139,6 @@
 }
 
 .chevron {
-  display: inline-block;
   transition: transform 0.2s;
 }
 

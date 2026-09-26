@@ -32,6 +32,10 @@
 
 .label {
   position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-6);
 }
 
 /* Phones: smaller text that never wraps; the columns grow with their label. */
