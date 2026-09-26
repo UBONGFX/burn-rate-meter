@@ -29,8 +29,8 @@ export type Settings = {
   presets: Preset[]
 }
 
-// Bump when the Settings shape changes in an incompatible way, and add a migration below.
-const SETTINGS_VERSION = 2
+// Bump when the Settings shape changes incompatibly; older stored settings are then discarded.
+const SETTINGS_VERSION = 3
 export const SETTINGS_KEY = 'burn-rate-meter:settings'
 
 export const LIMITS = {
@@ -75,7 +75,7 @@ export function countOf(attendance: Attendance, roleId: string): number {
 
 type StorageLike = Pick<Storage, 'getItem' | 'setItem'>
 
-function defaultStorage(): StorageLike | undefined {
+function defaultStorage(): Storage | undefined {
   try {
     return globalThis.localStorage
   } catch {
@@ -138,55 +138,25 @@ export function sanitizeSettings(value: unknown): Settings {
   }
 }
 
-/**
- * v1 had one hourly rate per preset (`people` × `hourlyRate`). Each distinct rate
- * becomes a role, so every meeting costs exactly what it did before.
- */
-export function migrateV1(value: unknown): unknown {
-  if (!isRecord(value)) return value
-  const roles: Role[] = []
-  const roleFor = (rawRate: unknown): Role => {
-    const hourlyRate = clampNumber(rawRate, LIMITS.hourlyRate, 80)
-    let role = roles.find((r) => r.hourlyRate === hourlyRate)
-    if (!role) {
-      role =
-        roles.length === 0
-          ? { id: 'team', name: 'Team', hourlyRate }
-          : { id: `team-${hourlyRate}`, name: `Team (${hourlyRate} €)`, hourlyRate }
-      roles.push(role)
-    }
-    return role
-  }
-
-  const defaultRole = roleFor(value.defaultHourlyRate)
-  const presets = Array.isArray(value.presets)
-    ? value.presets.filter(isRecord).map((p) => ({
-        id: p.id,
-        name: p.name,
-        attendance: { [roleFor(p.hourlyRate).id]: p.people },
-      }))
-    : undefined
-
-  return {
-    theme: value.theme,
-    language: value.language,
-    billValue: value.billValue,
-    roles,
-    defaultAttendance: { [defaultRole.id]: value.defaultPeople ?? 6 },
-    presets,
-  }
-}
-
 export function loadSettings(storage: StorageLike | undefined = defaultStorage()): Settings {
   try {
     const raw = storage?.getItem(SETTINGS_KEY)
     if (!raw) return DEFAULT_SETTINGS
     const parsed = JSON.parse(raw)
-    if (parsed?.version === 1) return sanitizeSettings(migrateV1(parsed.settings))
+    // No migrations: settings from an older version are simply replaced by the defaults.
     if (parsed?.version !== SETTINGS_VERSION) return DEFAULT_SETTINGS
     return sanitizeSettings(parsed.settings)
   } catch {
     return DEFAULT_SETTINGS
+  }
+}
+
+/** Forgets the stored settings, so the current defaults apply (including better ones in future versions). */
+export function clearSettings(storage: Pick<Storage, 'removeItem'> | undefined = defaultStorage()): void {
+  try {
+    storage?.removeItem(SETTINGS_KEY)
+  } catch {
+    // Blocked storage – nothing was persisted anyway.
   }
 }
 

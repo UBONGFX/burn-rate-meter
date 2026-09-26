@@ -1,5 +1,4 @@
 import { describe, expect, it } from 'vitest'
-import { hourlyTotal } from './cost'
 import { DEFAULT_SETTINGS, SETTINGS_KEY, loadSettings, saveSettings, type Settings } from './settings'
 
 function memoryStorage(initial: Record<string, string> = {}) {
@@ -39,14 +38,14 @@ describe('settings', () => {
     expect(loadSettings(storage)).toEqual(custom)
   })
 
-  it('falls back to defaults for corrupt or unknown data', () => {
+  it('falls back to defaults for corrupt data or another version', () => {
     expect(loadSettings(memoryStorage({ [SETTINGS_KEY]: '{not json' }))).toEqual(DEFAULT_SETTINGS)
-    expect(loadSettings(stored(999, {}))).toEqual(DEFAULT_SETTINGS)
+    expect(loadSettings(stored(2, { theme: 'dark' }))).toEqual(DEFAULT_SETTINGS)
   })
 
   it('repairs invalid fields individually', () => {
     const settings = loadSettings(
-      stored(2, {
+      stored(3, {
         theme: 'neon',
         language: 'fr',
         billValue: 20,
@@ -66,47 +65,11 @@ describe('settings', () => {
   })
 
   it('always keeps at least one role', () => {
-    expect(loadSettings(stored(2, { roles: [] })).roles).toEqual(DEFAULT_SETTINGS.roles)
+    expect(loadSettings(stored(3, { roles: [] })).roles).toEqual(DEFAULT_SETTINGS.roles)
   })
 
   it('survives a missing storage', () => {
     expect(loadSettings(undefined)).toEqual(DEFAULT_SETTINGS)
     expect(() => saveSettings(DEFAULT_SETTINGS, undefined)).not.toThrow()
-  })
-})
-
-describe('migration from v1', () => {
-  const v1 = {
-    theme: 'dark',
-    language: 'de',
-    defaultPeople: 5,
-    defaultHourlyRate: 80,
-    billValue: 20,
-    presets: [
-      { id: 'team', name: 'Teammeeting', people: 8, hourlyRate: 75 },
-      { id: 'daily', name: 'Daily', people: 4, hourlyRate: 80 },
-      { id: 'big', name: 'Bereichscall', people: 60, hourlyRate: 90 },
-    ],
-  }
-
-  it('turns each distinct hourly rate into a role and keeps the other settings', () => {
-    const settings = loadSettings(stored(1, v1))
-    expect(settings.theme).toBe('dark')
-    expect(settings.language).toBe('de')
-    expect(settings.billValue).toBe(20)
-    expect(settings.roles).toEqual([
-      { id: 'team', name: 'Team', hourlyRate: 80 },
-      { id: 'team-75', name: 'Team (75 €)', hourlyRate: 75 },
-      { id: 'team-90', name: 'Team (90 €)', hourlyRate: 90 },
-    ])
-    expect(settings.defaultAttendance).toEqual({ team: 5 })
-  })
-
-  it('keeps every meeting at exactly the same cost', () => {
-    const settings = loadSettings(stored(1, v1))
-    for (const old of v1.presets) {
-      const preset = settings.presets.find((p) => p.id === old.id)!
-      expect(hourlyTotal(settings.roles, preset.attendance)).toBe(old.people * old.hourlyRate)
-    }
   })
 })
