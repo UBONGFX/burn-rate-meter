@@ -27,9 +27,46 @@
         if (theme === 'light' || theme === 'dark') document.documentElement.dataset.theme = theme
       } catch {}
     </script>
+    <style>
+      /* Shown until the app's styles and script have loaded, so launching never
+         flashes black or white. Colors mirror --bg in src/styles/tokens.css. */
+      html {
+        background: #0e0b0a;
+      }
+      @media (prefers-color-scheme: light) {
+        html:not([data-theme='dark']) {
+          background: #fbf6f2;
+        }
+      }
+      html[data-theme='light'] {
+        background: #fbf6f2;
+      }
+      .splash {
+        position: fixed;
+        inset: 0;
+        display: grid;
+        place-items: center;
+        font-size: 72px;
+        animation: splash-glow 1.2s ease-in-out infinite alternate;
+      }
+      @keyframes splash-glow {
+        from {
+          filter: drop-shadow(0 0 8px rgb(255 122 26 / 0.4));
+        }
+        to {
+          filter: drop-shadow(0 0 28px rgb(255 122 26 / 0.9));
+        }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        .splash {
+          animation: none;
+        }
+      }
+    </style>
   </head>
   <body>
-    <div id="root"></div>
+    <!-- React replaces the splash when the app starts -->
+    <div id="root"><div class="splash" aria-hidden="true">🔥</div></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>

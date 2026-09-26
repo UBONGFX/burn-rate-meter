@@ -3,6 +3,12 @@
 // built files from the cache (their names change with every build).
 const CACHE = 'burn-rate-meter'
 const PAGE = './'
+// On a slow connection, wait this long for a fresh page before using the cached one
+const NETWORK_TIMEOUT = 3000
+
+function withTimeout(promise, ms) {
+  return Promise.race([promise, new Promise((_, reject) => setTimeout(() => reject(new Error('timeout')), ms))])
+}
 
 /** Same-origin files referenced by the page: scripts, styles, icons, manifest. */
 function filesIn(html) {
@@ -38,13 +44,13 @@ self.addEventListener('fetch', (event) => {
   if (request.method !== 'GET' || !request.url.startsWith(self.location.origin)) return
 
   if (request.mode === 'navigate') {
+    // Fresh page when the network is quick; the cached one when it's slow or offline.
+    // Either way the cache is updated in the background for the next launch.
+    const network = fetch(request).then((response) => ({ response, copy: response.clone() }))
+    event.waitUntil(network.then(({ response, copy }) => response.ok && storePage(copy)).catch(() => {}))
+    const fresh = network.then(({ response }) => response)
     event.respondWith(
-      fetch(request)
-        .then((response) => {
-          if (response.ok) event.waitUntil(storePage(response.clone()))
-          return response
-        })
-        .catch(() => caches.match(PAGE, { ignoreVary: true })),
+      withTimeout(fresh, NETWORK_TIMEOUT).catch(async () => (await caches.match(PAGE, { ignoreVary: true })) ?? fresh),
     )
     return
   }
