@@ -2,6 +2,10 @@
 
 All notable changes to this project are documented here. The project follows [Semantic Versioning](https://semver.org).
 
+## 1.1.1 – 2026-09-26
+
+- Larger meter counter on phones: short and medium amounts use up to ~40% more of the screen width
+
 ## 1.1.0 – 2026-09-26
 
 - Share the result of a meeting as an image and text (share sheet on phones, download and clipboard on desktop)

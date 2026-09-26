@@ -25,7 +25,7 @@ import type { MeetingConfig } from './QuickStart'
  * amounts like "12.345,67 €" still fit the page width (max 760px minus gutters).
  */
 function counterFontSize(text: string): string {
-  return `min(8.5rem, 17vw, calc(${(1.55 / text.length).toFixed(4)} * min(100vw - 32px, 728px)))`
+  return `min(8.5rem, calc(${(1.55 / text.length).toFixed(4)} * min(100vw - 32px, 728px)))`
 }
 
 type MeterProps = {
