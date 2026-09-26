@@ -7,7 +7,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 ```bash
 npm run dev                          # Vite dev server
 npm test                             # all unit tests (vitest run, src/**/*.test.ts)
-npm run test:e2e                     # Playwright end-to-end tests in e2e/, Chromium + Firefox (starts its own dev server on :5198)
+npm run test:e2e                     # Playwright end-to-end tests in e2e/, Chromium + Firefox (+ WebKit in CI only; starts its own dev server on :5198)
 npx playwright test --project=firefox  # one browser only
 npx playwright install --only-shell chromium firefox  # one-time browser download for test:e2e
 npx vitest run src/lib/cost.test.ts  # single test file
