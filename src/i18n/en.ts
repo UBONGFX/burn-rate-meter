@@ -45,6 +45,16 @@ const en: Messages = {
     newMeeting: 'New meeting',
     sameAgain: 'Same again',
   },
+  share: {
+    button: '📤 Share result',
+    costHeadline: (name) => `${name ?? 'This meeting'} cost`,
+    costLine: (name, amount) => `🔥 ${name ?? 'This meeting'} cost ${amount}.`,
+    footer: (url) => `Measured with Burn Rate Meter: ${url}`,
+    savedAndCopied: 'Image saved and text copied – just paste it.',
+    copied: 'Text copied – just paste it.',
+    saved: 'Image saved.',
+    failed: 'Sharing didn’t work, sorry.',
+  },
   comparisons: {
     usedCar: ['used car', 'used cars'],
     holiday: ['package holiday', 'package holidays'],

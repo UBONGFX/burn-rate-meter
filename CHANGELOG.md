@@ -2,6 +2,11 @@
 
 All notable changes to this project are documented here. The project follows [Semantic Versioning](https://semver.org).
 
+## 1.1.0 – 2026-09-26
+
+- Share the result of a meeting as an image and text (share sheet on phones, download and clipboard on desktop)
+- The app is online at https://ubongfx.github.io/burn-rate-meter/ and deploys automatically from main
+
 ## 1.0.0 – 2026-09-26
 
 First release.
