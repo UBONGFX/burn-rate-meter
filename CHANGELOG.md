@@ -2,6 +2,13 @@
 
 All notable changes to this project are documented here. The project follows [Semantic Versioning](https://semver.org).
 
+## 1.5.0 – 2026-09-26
+
+- More comparisons (cinema ticket, book, concert ticket, sneakers, smartphone)
+- The comparison picks the cheapest thing that fits up to 12 times, so there are often many emojis
+- Shows the assumed price below the comparison, e.g. "je ca. 11 €"
+- A bill falls every 5 € by default (was 10 €)
+
 ## 1.4.0 – 2026-09-26
 
 - Clean line icons (Lucide) instead of emojis on buttons and options; the 🔥 logo and the pizza comparison stay

@@ -39,7 +39,7 @@ async function finishMeeting(page: Page) {
     delete (Element.prototype as Partial<Element>).animate
   })
   await page.goto('/')
-  await page.clock.pauseAt(new Date('2026-01-01T09:00:01'))
+  await page.clock.pauseAt(new Date('2026-01-01T09:01:00'))
   await page.getByRole('button', { name: /Teammeeting/ }).click()
   await page.getByRole('button', { name: 'Meeting starten' }).click()
   await page.clock.runFor(1000)

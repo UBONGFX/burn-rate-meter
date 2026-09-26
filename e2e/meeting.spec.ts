@@ -17,7 +17,7 @@ test('runs a meeting: counts, pauses, changes headcount and ends', async ({ page
     delete (Element.prototype as Partial<Element>).animate
   })
   await page.goto('/')
-  await page.clock.pauseAt(new Date('2026-01-01T09:00:01'))
+  await page.clock.pauseAt(new Date('2026-01-01T09:01:00'))
 
   // Teammeeting preset: 6 × Developer (50) + 1 × Product Owner (55) + 1 × Scrum Master (50) = 405 €/h
   await page.getByRole('button', { name: /Teammeeting/ }).click()

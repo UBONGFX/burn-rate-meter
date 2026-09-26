@@ -68,34 +68,54 @@ export function formatDuration(elapsedMs: number): string {
 }
 
 export type ComparisonKey =
-  | 'usedCar'
-  | 'holiday'
-  | 'laptop'
-  | 'bike'
-  | 'headphones'
-  | 'pizza'
-  | 'doner'
   | 'coffee'
+  | 'doner'
+  | 'pizza'
+  | 'cinema'
+  | 'book'
+  | 'concert'
+  | 'sneakers'
+  | 'headphones'
+  | 'bike'
+  | 'smartphone'
+  | 'laptop'
+  | 'holiday'
+  | 'usedCar'
 
 type Comparison = { key: ComparisonKey; emoji: string; price: number }
 
-// Sorted from most to least expensive; the first one we can afford at least once wins.
+// Rough German prices (2026), from cheap to expensive.
 // The names live in the i18n dictionaries under `comparisons`.
 const COMPARISONS: Comparison[] = [
-  { key: 'usedCar', emoji: '🚗', price: 8000 },
-  { key: 'holiday', emoji: '🏝️', price: 1500 },
-  { key: 'laptop', emoji: '💻', price: 1200 },
-  { key: 'bike', emoji: '🚲', price: 600 },
-  { key: 'headphones', emoji: '🎧', price: 250 },
-  { key: 'pizza', emoji: '🍕', price: 11 },
-  { key: 'doner', emoji: '🥙', price: 7.5 },
   { key: 'coffee', emoji: '☕', price: 3.5 },
+  { key: 'doner', emoji: '🥙', price: 7.5 },
+  { key: 'pizza', emoji: '🍕', price: 11 },
+  { key: 'cinema', emoji: '🎬', price: 14 },
+  { key: 'book', emoji: '📚', price: 22 },
+  { key: 'concert', emoji: '🎟️', price: 75 },
+  { key: 'sneakers', emoji: '👟', price: 130 },
+  { key: 'headphones', emoji: '🎧', price: 250 },
+  { key: 'bike', emoji: '🚲', price: 600 },
+  { key: 'smartphone', emoji: '📱', price: 900 },
+  { key: 'laptop', emoji: '💻', price: 1200 },
+  { key: 'holiday', emoji: '🏝️', price: 1500 },
+  { key: 'usedCar', emoji: '🚗', price: 8000 },
 ]
 
-export type ComparisonResult = { key: ComparisonKey; emoji: string; count: number }
+/** The result shows up to this many emojis, so comparisons aim for at most this count. */
+export const MAX_COMPARISON_COUNT = 12
 
+export type ComparisonResult = { key: ComparisonKey; emoji: string; count: number; price: number }
+
+/**
+ * What the money could have bought: the cheapest thing that fits at most 12 times
+ * (so 30 € are "8 coffees", 500 € are "6 concert tickets"). Beyond that, the most
+ * expensive thing. Below the price of a coffee: nothing.
+ */
 export function compareCost(amount: number): ComparisonResult | null {
-  const match = COMPARISONS.find((c) => amount >= c.price)
-  if (!match) return null
-  return { key: match.key, emoji: match.emoji, count: Math.floor(amount / match.price) }
+  const affordable = COMPARISONS.filter((c) => amount >= c.price)
+  if (affordable.length === 0) return null
+  const match =
+    affordable.find((c) => Math.floor(amount / c.price) <= MAX_COMPARISON_COUNT) ?? affordable[affordable.length - 1]
+  return { key: match.key, emoji: match.emoji, count: Math.floor(amount / match.price), price: match.price }
 }

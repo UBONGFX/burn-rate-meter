@@ -31,7 +31,7 @@ async function setUp(page: Page, settings: object = {}) {
     localStorage.setItem('burn-rate-meter:settings', JSON.stringify({ version: 3, settings: stored }))
   }, settings)
   await page.goto('/')
-  await page.clock.pauseAt(new Date('2026-01-01T09:00:01'))
+  await page.clock.pauseAt(new Date('2026-01-01T09:01:00'))
 }
 
 async function startMeeting(page: Page, preset: string) {

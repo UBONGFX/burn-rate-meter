@@ -51,6 +51,12 @@
   letter-spacing: -0.01em;
 }
 
+.price-note {
+  margin-top: calc(-1 * var(--space-2));
+  font-size: var(--text-sm);
+  color: var(--text-muted);
+}
+
 .sub {
   color: var(--text-muted);
 }

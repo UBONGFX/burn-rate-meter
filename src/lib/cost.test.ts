@@ -62,9 +62,16 @@ describe('cost', () => {
     expect(formatDuration(3_725_000)).toBe('1:02:05')
   })
 
-  it('picks the most expensive affordable comparison', () => {
+  it('picks the cheapest thing that fits at most 12 times', () => {
     expect(compareCost(2)).toBeNull()
-    expect(compareCost(23)).toEqual({ key: 'pizza', emoji: '🍕', count: 2 })
-    expect(compareCost(1300)).toEqual({ key: 'laptop', emoji: '💻', count: 1 })
+    expect(compareCost(3.5)).toEqual({ key: 'coffee', emoji: '☕', count: 1, price: 3.5 })
+    expect(compareCost(30)).toEqual({ key: 'coffee', emoji: '☕', count: 8, price: 3.5 })
+    expect(compareCost(135)).toEqual({ key: 'pizza', emoji: '🍕', count: 12, price: 11 })
+    expect(compareCost(500)).toEqual({ key: 'concert', emoji: '🎟️', count: 6, price: 75 })
+    expect(compareCost(1300)).toEqual({ key: 'sneakers', emoji: '👟', count: 10, price: 130 })
+  })
+
+  it('falls back to the most expensive thing for huge amounts', () => {
+    expect(compareCost(200_000)).toEqual({ key: 'usedCar', emoji: '🚗', count: 25, price: 8000 })
   })
 })
