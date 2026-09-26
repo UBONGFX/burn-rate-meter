@@ -1,0 +1,75 @@
+/* Design tokens: colors for the dark base theme and the light overrides. */
+
+/* Dark is the base theme. Light applies when the OS prefers it (and the user
+   hasn't forced dark), or when forced via <html data-theme="light">. */
+:root {
+  --bg: #0e0b0a;
+  --surface: #1a1412;
+  --surface-2: #251c19;
+  --border: #3a2a24;
+  --text: #f6ece6;
+  --text-muted: #b09a90;
+  --accent: #ff7a1a;
+  --accent-2: #ff3d2e;
+  /* Accent for small text: at least 4.5:1 on every surface (WCAG AA) */
+  --accent-text: #ff7a1a;
+  /* Fills behind white text (buttons, active pill): at least 4.5:1 with white */
+  --cta-from: #c2410c;
+  --cta-to: #c0262d;
+  --danger-solid: #c4302b;
+  --counter-top: #ffd27a;
+  --danger: #e5484d;
+  --danger-text: #ffb4b0;
+  --glow: 255 90 20;
+  --glow-strength: 1;
+  --shadow: 0 0 0;
+  --bill: #6fbf73;
+  --bill-dark: #2f6b33;
+  --radius: 14px;
+
+  color-scheme: dark;
+  font-family: Inter, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  color: var(--text);
+  background: var(--bg);
+  -webkit-font-smoothing: antialiased;
+}
+
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme='dark']) {
+    --bg: #fbf6f2;
+    --surface: #ffffff;
+    --surface-2: #f5ece6;
+    --border: #e8d8ce;
+    --text: #2a1d17;
+    --text-muted: #7c655b;
+    --accent: #e85d04;
+    --accent-2: #d62a1c;
+    --accent-text: #b34700;
+    --counter-top: #ff9f2e;
+    --danger: #d1343a;
+    --danger-text: #b4232a;
+    --glow-strength: 0.55;
+    --shadow: 90 50 30;
+
+    color-scheme: light;
+  }
+}
+
+:root[data-theme='light'] {
+  --bg: #fbf6f2;
+  --surface: #ffffff;
+  --surface-2: #f5ece6;
+  --border: #e8d8ce;
+  --text: #2a1d17;
+  --text-muted: #7c655b;
+  --accent: #e85d04;
+  --accent-2: #d62a1c;
+  --accent-text: #b34700;
+  --counter-top: #ff9f2e;
+  --danger: #d1343a;
+  --danger-text: #b4232a;
+  --glow-strength: 0.55;
+  --shadow: 90 50 30;
+
+  color-scheme: light;
+}

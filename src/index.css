@@ -1,119 +1,3 @@
-/* Dark is the base theme. Light applies when the OS prefers it (and the user
-   hasn't forced dark), or when forced via <html data-theme="light">. */
-:root {
-  --bg: #0e0b0a;
-  --surface: #1a1412;
-  --surface-2: #251c19;
-  --border: #3a2a24;
-  --text: #f6ece6;
-  --text-muted: #b09a90;
-  --accent: #ff7a1a;
-  --accent-2: #ff3d2e;
-  /* Accent for small text: at least 4.5:1 on every surface (WCAG AA) */
-  --accent-text: #ff7a1a;
-  /* Fills behind white text (buttons, active pill): at least 4.5:1 with white */
-  --cta-from: #c2410c;
-  --cta-to: #c0262d;
-  --danger-solid: #c4302b;
-  --counter-top: #ffd27a;
-  --danger: #e5484d;
-  --danger-text: #ffb4b0;
-  --glow: 255 90 20;
-  --glow-strength: 1;
-  --shadow: 0 0 0;
-  --bill: #6fbf73;
-  --bill-dark: #2f6b33;
-  --radius: 14px;
-
-  color-scheme: dark;
-  font-family: Inter, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
-  color: var(--text);
-  background: var(--bg);
-  -webkit-font-smoothing: antialiased;
-}
-
-@media (prefers-color-scheme: light) {
-  :root:not([data-theme='dark']) {
-    --bg: #fbf6f2;
-    --surface: #ffffff;
-    --surface-2: #f5ece6;
-    --border: #e8d8ce;
-    --text: #2a1d17;
-    --text-muted: #7c655b;
-    --accent: #e85d04;
-    --accent-2: #d62a1c;
-    --accent-text: #b34700;
-    --counter-top: #ff9f2e;
-    --danger: #d1343a;
-    --danger-text: #b4232a;
-    --glow-strength: 0.55;
-    --shadow: 90 50 30;
-
-    color-scheme: light;
-  }
-}
-
-:root[data-theme='light'] {
-  --bg: #fbf6f2;
-  --surface: #ffffff;
-  --surface-2: #f5ece6;
-  --border: #e8d8ce;
-  --text: #2a1d17;
-  --text-muted: #7c655b;
-  --accent: #e85d04;
-  --accent-2: #d62a1c;
-  --accent-text: #b34700;
-  --counter-top: #ff9f2e;
-  --danger: #d1343a;
-  --danger-text: #b4232a;
-  --glow-strength: 0.55;
-  --shadow: 90 50 30;
-
-  color-scheme: light;
-}
-
-* {
-  box-sizing: border-box;
-}
-
-body {
-  margin: 0;
-  min-height: 100vh;
-  background:
-    radial-gradient(ellipse at 50% 120%, rgb(var(--glow) / calc(0.18 * var(--glow-strength))), transparent 60%),
-    var(--bg);
-  overflow-x: hidden;
-}
-
-button,
-input {
-  font: inherit;
-  color: inherit;
-}
-
-button {
-  cursor: pointer;
-}
-
-button:disabled {
-  cursor: not-allowed;
-  opacity: 0.4;
-}
-
-:focus-visible {
-  outline: 2px solid var(--accent);
-  outline-offset: 2px;
-}
-
-h2 {
-  margin: 0 0 1rem;
-  font-size: 1.1rem;
-  font-weight: 600;
-  color: var(--text-muted);
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-}
-
 /* Layout */
 
 .app {
@@ -159,12 +43,6 @@ main {
   filter: drop-shadow(0 0 8px rgb(var(--glow) / calc(0.7 * var(--glow-strength))));
 }
 
-.card {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  padding: 1.25rem;
-}
 
 .actions {
   display: flex;
@@ -838,14 +716,6 @@ main {
   align-self: center;
 }
 
-.sr-only {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  overflow: hidden;
-  clip-path: inset(50%);
-  white-space: nowrap;
-}
 
 /* A compact stepper with a unit needs room for the number next to "€/h". */
 .stepper-compact .stepper-input:has(.stepper-suffix) {
