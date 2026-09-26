@@ -84,3 +84,42 @@ test.describe('language', () => {
     await expect(page.locator('html')).toHaveAttribute('lang', 'de')
   })
 })
+
+test('keeps the screen on only while the meeting runs', async ({ page }) => {
+  // Count the wake locks that are currently held
+  await page.addInitScript(() => {
+    const locks = { held: 0 }
+    Object.assign(window, { locks })
+    Object.defineProperty(navigator, 'wakeLock', {
+      configurable: true,
+      value: {
+        request: async () => {
+          locks.held++
+          const sentinel = {
+            released: false,
+            release: async () => {
+              if (!sentinel.released) locks.held--
+              sentinel.released = true
+            },
+          }
+          return sentinel
+        },
+      },
+    })
+  })
+  // Strict mode runs effects twice in dev, so count held locks rather than calls
+  const held = () => page.evaluate(() => (window as unknown as { locks: { held: number } }).locks.held)
+
+  await page.goto('/')
+  await page.getByRole('button', { name: 'Meeting starten' }).click()
+  await expect.poll(held).toBe(1)
+
+  await page.getByRole('button', { name: /Pause/ }).click()
+  await expect.poll(held).toBe(0)
+
+  await page.getByRole('button', { name: /Weiter/ }).click()
+  await expect.poll(held).toBe(1)
+
+  await page.getByRole('button', { name: /Beenden/ }).click()
+  await expect.poll(held).toBe(0)
+})

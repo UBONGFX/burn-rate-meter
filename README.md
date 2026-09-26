@@ -19,7 +19,7 @@ How much money is this meeting burning right now? Pick who is in the room, start
 - **Share:** the result as an image and text – through the share sheet on phones, or saved and copied on desktop
 - **Settings:** your own roles, rates, default attendance, presets and bill value, saved in your browser
 - **German & English, light & dark:** detected from your system, or set in the settings
-- **Works on phones** and respects reduced motion
+- **Works on phones:** the screen stays on while a meeting runs, and reduced motion is respected
 
 ## Development
 

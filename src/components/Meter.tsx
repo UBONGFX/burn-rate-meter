@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { AnimatePresence, motion, useReducedMotion } from 'motion/react'
 import { useMeetingTimer } from '../hooks/useMeetingTimer'
+import { useWakeLock } from '../hooks/useWakeLock'
 import { useI18n } from '../i18n/useI18n'
 import {
   changeRate,
@@ -38,6 +39,8 @@ type MeterProps = {
 export function Meter({ config, billValue, onRestart, onNew }: MeterProps) {
   const { t, formatEUR } = useI18n()
   const { status, elapsedMs, now, pause, resume, stop } = useMeetingTimer()
+  // Keep the phone's screen on while money is burning
+  useWakeLock(status === 'running')
   const [attendance, setAttendance] = useState<Attendance>(config.attendance)
   const [segment, setSegment] = useState(() => startSegment(hourlyTotal(config.roles, config.attendance)))
   const reduceMotion = useReducedMotion()
