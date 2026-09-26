@@ -1,6 +1,12 @@
 import type { Messages } from './de'
 
 const en: Messages = {
+  error: {
+    title: 'Something got burned',
+    message: 'The app ran into an error. Reloading usually helps – otherwise reset the settings.',
+    reload: 'Reload',
+    reset: 'Reset settings',
+  },
   nav: {
     settings: 'Settings',
     back: '← Back',
