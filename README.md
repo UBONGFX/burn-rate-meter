@@ -19,7 +19,7 @@ How much money is this meeting burning right now? Pick who is in the room, start
 - **Share:** the result as an image and text – through the share sheet on phones, or saved and copied on desktop
 - **Settings:** your own roles, rates, default attendance, presets and bill value, saved in your browser
 - **German & English, light & dark:** detected from your system, or set in the settings
-- **Works on phones:** the screen stays on while a meeting runs, and reduced motion is respected
+- **Works on phones:** install it to your home screen, use it offline; the screen stays on while a meeting runs
 
 ## Development
 
@@ -31,6 +31,7 @@ npm run test:e2e     # end-to-end tests in Chromium and Firefox (first run: npx 
 npm run lint         # oxlint
 npm run build        # type-check + production build
 npm run screenshots  # regenerate the screenshots above
+npm run brand-assets # regenerate the app icons in public/icons
 ```
 
 Built with Vite, React, TypeScript and [Motion](https://motion.dev).

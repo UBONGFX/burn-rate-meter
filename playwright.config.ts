@@ -1,6 +1,6 @@
 import { defineConfig, devices } from '@playwright/test'
+import { DEV_PORT as PORT, PAGES_APP, PAGES_PORT } from './e2e/servers.ts'
 
-const PORT = 5198
 
 export default defineConfig({
   testDir: 'e2e',
@@ -17,9 +17,17 @@ export default defineConfig({
     { name: 'chromium', use: { ...devices['Desktop Chrome'] } },
     { name: 'firefox', use: { ...devices['Desktop Firefox'] } },
   ],
-  webServer: {
-    command: `npm run dev -- --port ${PORT} --strictPort`,
-    url: `http://localhost:${PORT}`,
-    reuseExistingServer: !process.env.CI,
-  },
+  webServer: [
+    {
+      command: `npm run dev -- --port ${PORT} --strictPort`,
+      url: `http://localhost:${PORT}`,
+      reuseExistingServer: !process.env.CI,
+    },
+    {
+      command: `npm run build -- --outDir dist-pages && npx vite preview --outDir dist-pages --port ${PAGES_PORT} --strictPort`,
+      env: { BASE_PATH: '/burn-rate-meter/' },
+      url: PAGES_APP,
+      reuseExistingServer: !process.env.CI,
+    },
+  ],
 })
