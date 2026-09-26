@@ -2,6 +2,7 @@ import { motion, useReducedMotion } from 'motion/react'
 import { useI18n } from '../i18n/useI18n'
 import { compareCost } from '../lib/cost'
 import { countOf, type Attendance, type Role } from '../lib/settings'
+import { Button } from './Button'
 
 // Up to this many, the comparison shows one emoji per item ("🍕🍕🍕").
 const MAX_EMOJIS = 12
@@ -65,12 +66,12 @@ export function Summary({ cost, roles, attendance, onNew, onRestart }: SummaryPr
       </div>
 
       <div className="summary-actions">
-        <button type="button" className="btn" onClick={onNew}>
+        <Button size="medium" onClick={onNew}>
           {t.meter.newMeeting}
-        </button>
-        <button type="button" className="btn btn-primary" onClick={onRestart}>
+        </Button>
+        <Button variant="primary" size="medium" onClick={onRestart}>
           {t.meter.sameAgain}
-        </button>
+        </Button>
       </div>
     </div>
   )

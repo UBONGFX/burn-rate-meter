@@ -1,0 +1,59 @@
+.btn {
+  border: 1px solid var(--border);
+  background: var(--surface-2);
+  border-radius: 999px;
+  padding: 0.6rem 1.2rem;
+  font-weight: 600;
+  transition: background 0.15s, border-color 0.15s;
+}
+
+.btn:hover:not(:disabled) {
+  border-color: var(--accent);
+}
+
+.primary {
+  border: none;
+  background: linear-gradient(135deg, var(--cta-from), var(--cta-to));
+  color: #fff;
+  box-shadow: 0 6px 24px rgb(var(--glow) / calc(0.35 * var(--glow-strength)));
+}
+
+.danger-solid {
+  border: none;
+  background: var(--danger-solid);
+  color: #fff;
+}
+
+.danger {
+  border-color: var(--danger);
+  color: var(--danger-text);
+}
+
+.ghost {
+  background: transparent;
+  border-color: transparent;
+  color: var(--text-muted);
+}
+
+.medium {
+  padding: 0.8rem 1rem;
+}
+
+.large {
+  width: 100%;
+  padding: 1rem;
+  font-size: 1.2rem;
+}
+
+/* Text-only button, e.g. "Vorlage löschen" */
+.text {
+  padding: 0.4rem 0;
+  border: none;
+  background: transparent;
+  font-weight: 600;
+  color: var(--text-muted);
+}
+
+.text-danger {
+  color: var(--danger);
+}

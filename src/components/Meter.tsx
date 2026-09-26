@@ -13,6 +13,7 @@ import {
 } from '../lib/cost'
 import type { Attendance } from '../lib/settings'
 import { AttendeeList } from './AttendeeList'
+import { Button } from './Button'
 import { MoneyRain } from './MoneyRain'
 import { Summary } from './Summary'
 import type { MeetingConfig } from './QuickStart'
@@ -122,17 +123,13 @@ export function Meter({ config, billValue, onRestart, onNew }: MeterProps) {
           >
             <div className="actions">
               {status === 'running' ? (
-                <button type="button" className="btn" onClick={pause}>
-                  {t.meter.pause}
-                </button>
+                <Button onClick={pause}>{t.meter.pause}</Button>
               ) : (
-                <button type="button" className="btn" onClick={resume}>
-                  {t.meter.resume}
-                </button>
+                <Button onClick={resume}>{t.meter.resume}</Button>
               )}
-              <button type="button" className="btn btn-danger" onClick={stop}>
+              <Button variant="danger" onClick={stop}>
                 {t.meter.end}
-              </button>
+              </Button>
             </div>
             <AttendeeList minimal roles={config.roles} attendance={attendance} onChange={changeCount} />
           </motion.div>

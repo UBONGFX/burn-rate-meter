@@ -4,6 +4,7 @@ import { useI18n } from '../i18n/useI18n'
 import { costPerMinute, headcount, hourlyTotal } from '../lib/cost'
 import { countOf, type Attendance, type Role, type Settings } from '../lib/settings'
 import { AttendeeList } from './AttendeeList'
+import { buttonClass } from './buttonClass'
 
 export type MeetingConfig = {
   name: string | null
@@ -74,7 +75,7 @@ export function QuickStart({ settings, onStart }: QuickStartProps) {
 
       <motion.button
         type="button"
-        className="btn btn-primary btn-large"
+        className={buttonClass({ variant: 'primary', size: 'large' })}
         whileHover={people > 0 ? { scale: 1.02 } : undefined}
         whileTap={people > 0 ? { scale: 0.97 } : undefined}
         disabled={people === 0}

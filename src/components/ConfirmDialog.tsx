@@ -1,4 +1,5 @@
 import { useEffect, useId, useRef } from 'react'
+import { Button } from './Button'
 
 type ConfirmDialogProps = {
   open: boolean
@@ -50,12 +51,12 @@ export function ConfirmDialog({ open, title, message, confirmLabel, cancelLabel,
           {message}
         </p>
         <div className="dialog-actions">
-          <button type="button" className="btn" autoFocus onClick={onCancel}>
+          <Button autoFocus onClick={onCancel}>
             {cancelLabel}
-          </button>
-          <button type="button" className="btn btn-danger-solid" onClick={onConfirm}>
+          </Button>
+          <Button variant="dangerSolid" onClick={onConfirm}>
             {confirmLabel}
-          </button>
+          </Button>
         </div>
       </div>
     </dialog>

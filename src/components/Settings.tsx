@@ -5,6 +5,7 @@ import { useI18n } from '../i18n/useI18n'
 import { costPerMinute, headcount, hourlyTotal } from '../lib/cost'
 import { LIMITS, THEMES, type Attendance, type Preset, type Role, type Settings as SettingsType } from '../lib/settings'
 import { AttendeeRows } from './AttendeeList'
+import { Button } from './Button'
 import { ConfirmDialog } from './ConfirmDialog'
 import { Segmented } from './Segmented'
 import { Stepper } from './Stepper'
@@ -205,14 +206,14 @@ export function Settings({ settings, onChange, onReset }: SettingsProps) {
                               updatePreset(preset.id, { attendance: { ...preset.attendance, [roleId]: count } })
                             }
                           />
-                          <button
-                            type="button"
-                            className="text-button text-button-danger"
+                          <Button
+                            variant="textDanger"
+                            className="preset-delete"
                             aria-label={t.settings.deletePreset(preset.name)}
                             onClick={() => update({ presets: settings.presets.filter((p) => p.id !== preset.id) })}
                           >
                             {t.settings.deletePresetText}
-                          </button>
+                          </Button>
                         </div>
                       </motion.div>
                     )}
@@ -229,13 +230,13 @@ export function Settings({ settings, onChange, onReset }: SettingsProps) {
         </ul>
       </section>
 
-      <button
-        type="button"
-        className="text-button text-button-danger settings-reset"
+      <Button
+        variant="textDanger"
+        className="settings-reset"
         onClick={() => setConfirmingReset(true)}
       >
         {t.settings.reset}
-      </button>
+      </Button>
 
       <ConfirmDialog
         open={confirmingReset}

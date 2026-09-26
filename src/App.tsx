@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { AnimatePresence, motion } from 'motion/react'
+import { Button } from './components/Button'
 import { Meter } from './components/Meter'
 import { QuickStart, type MeetingConfig } from './components/QuickStart'
 import { Settings } from './components/Settings'
@@ -48,19 +49,14 @@ function App() {
             <span className="logo-flame">🔥</span> Burn Rate Meter
           </button>
           {view === 'start' && (
-            <button
-              type="button"
-              className="btn btn-ghost"
-              aria-label={t.nav.settings}
-              onClick={() => setView('settings')}
-            >
+            <Button variant="ghost" aria-label={t.nav.settings} onClick={() => setView('settings')}>
               ⚙️<span className="nav-label"> {t.nav.settings}</span>
-            </button>
+            </Button>
           )}
           {view === 'settings' && (
-            <button type="button" className="btn btn-ghost" onClick={() => setView('start')}>
+            <Button variant="ghost" onClick={() => setView('start')}>
               {t.nav.back}
-            </button>
+            </Button>
           )}
         </header>
 
