@@ -46,3 +46,48 @@ test('has a link preview image for chats and social media', async ({ page, reque
   const png = await image.body()
   expect([png.readUInt32BE(16), png.readUInt32BE(20)]).toEqual([1200, 630])
 })
+
+test.describe('launch', () => {
+  test.use({ colorScheme: 'dark' })
+
+  test('shows a themed splash until the app has loaded', async ({ page }) => {
+    // Hold back the app's script to look at the page before it runs
+    let release!: () => void
+    const scriptHeld = new Promise<void>((resolve) => (release = resolve))
+    await page.route('**/assets/*.js', async (route) => {
+      await scriptHeld
+      await route.continue()
+    })
+
+    await page.goto(APP, { waitUntil: 'commit' })
+    await expect(page.getByText('🔥')).toBeVisible()
+    // Dark background right away – no white flash
+    expect(await page.evaluate(() => getComputedStyle(document.documentElement).backgroundColor)).toBe('rgb(14, 11, 10)')
+
+    release()
+    await expect(page.getByRole('button', { name: 'Meeting starten' })).toBeVisible()
+    await expect(page.locator('.splash')).toHaveCount(0)
+  })
+
+  test('starts from the cache when the network is slow', async ({ page, context, browserName }) => {
+    // Playwright can only delay service worker requests in Chromium
+    test.skip(browserName !== 'chromium', 'needs routing of service worker requests')
+    await page.goto(APP)
+    await page.evaluate(async () => {
+      await navigator.serviceWorker.ready
+      if (!navigator.serviceWorker.controller) {
+        await new Promise((resolve) => navigator.serviceWorker.addEventListener('controllerchange', resolve, { once: true }))
+      }
+    })
+
+    // A very slow network: the page takes 10 s
+    await context.route(APP, async (route) => {
+      await new Promise((resolve) => setTimeout(resolve, 10_000))
+      await route.continue().catch(() => {})
+    })
+    const started = Date.now()
+    await page.reload({ waitUntil: 'commit' })
+    await expect(page.getByRole('button', { name: 'Meeting starten' })).toBeVisible()
+    expect(Date.now() - started).toBeLessThan(6000)
+  })
+})
