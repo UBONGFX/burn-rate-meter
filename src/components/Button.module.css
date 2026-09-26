@@ -14,14 +14,14 @@
 .primary {
   border: none;
   background: linear-gradient(135deg, var(--cta-from), var(--cta-to));
-  color: #fff;
+  color: var(--on-fill);
   box-shadow: 0 6px 24px rgb(var(--glow) / calc(0.35 * var(--glow-strength)));
 }
 
 .danger-solid {
   border: none;
   background: var(--danger-solid);
-  color: #fff;
+  color: var(--on-fill);
 }
 
 .danger {

@@ -23,7 +23,11 @@
   --glow: 255 90 20;
   --glow-strength: 1;
   --shadow: 0 0 0;
+  /* Text on the colored fills above */
+  --on-fill: #fff;
   --bill: #6fbf73;
+  --bill-highlight: #8fd48f;
+  --bill-lowlight: #4f9a53;
   --bill-dark: #2f6b33;
   --radius: 14px;
 

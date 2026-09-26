@@ -1,0 +1,23 @@
+{
+  "rules": {
+    "color-no-hex": [true, { "message": "Use a color token from src/styles/tokens.css" }],
+    "color-named": ["never", { "message": "Use a color token from src/styles/tokens.css" }],
+    "color-no-invalid-hex": true,
+    "declaration-no-important": true,
+    "declaration-block-no-duplicate-properties": [true, { "ignore": ["consecutive-duplicates-with-different-values"] }],
+    "selector-class-pattern": ["^[a-z][a-z0-9]*(-[a-z0-9]+)*$", { "message": "Use kebab-case class names (styles.fooBar in TS)" }],
+    "no-duplicate-selectors": true,
+    "block-no-empty": true,
+    "property-no-unknown": true,
+    "unit-no-unknown": true,
+    "selector-pseudo-class-no-unknown": true,
+    "selector-pseudo-element-no-unknown": true,
+    "keyframe-declaration-no-important": true
+  },
+  "overrides": [
+    {
+      "files": ["src/styles/tokens.css"],
+      "rules": { "color-no-hex": null }
+    }
+  ]
+}

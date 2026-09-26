@@ -14,7 +14,7 @@
   border-radius: 5px;
   background:
     radial-gradient(circle at 50% 50%, var(--bill) 0 11px, transparent 12px),
-    linear-gradient(135deg, #8fd48f, var(--bill) 50%, #4f9a53);
+    linear-gradient(135deg, var(--bill-highlight), var(--bill) 50%, var(--bill-lowlight));
   border: 2px solid var(--bill-dark);
   box-shadow: 0 4px 12px rgb(var(--shadow) / 0.3);
   display: grid;
